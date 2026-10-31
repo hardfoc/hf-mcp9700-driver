@@ -211,7 +211,7 @@ seo:
   name: "HardFOC MCP9700 Driver"
   description: >
     Header-only MCP9700/MCP9700A linear thermistor driver with ESP32-C6 ADC example
-  url: "https://n3b3x.github.io/hf-mcp9700-driver"
+  url: "https://hardfoc.github.io/hf-mcp9700-driver"
   twitter:
     card: "summary_large_image"
     site: "@n3b3x"

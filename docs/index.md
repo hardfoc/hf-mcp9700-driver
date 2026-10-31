@@ -10,9 +10,9 @@ has_children: true
 
 # HF-MCP9700 documentation
 
-Welcome. This site mirrors the [`docs/`](https://github.com/N3b3x/hf-mcp9700-driver/tree/main/docs) folder in the repository and adds navigation, search, and diagrams for the **MCP9700 / MCP9700A** linear active thermistor driver.
+Welcome. This site mirrors the [`docs/`](https://github.com/hardfoc/hf-mcp9700-driver/tree/main/docs) folder in the repository and adds navigation, search, and diagrams for the **MCP9700 / MCP9700A** linear active thermistor driver.
 
-> **Browse on GitHub:** [repository home](https://github.com/N3b3x/hf-mcp9700-driver) · [Issues](https://github.com/N3b3x/hf-mcp9700-driver/issues)
+> **Browse on GitHub:** [repository home](https://github.com/hardfoc/hf-mcp9700-driver) · [Issues](https://github.com/hardfoc/hf-mcp9700-driver/issues)
 
 ## Documentation structure
 
@@ -62,6 +62,6 @@ Welcome. This site mirrors the [`docs/`](https://github.com/N3b3x/hf-mcp9700-dri
 
 - **Build or flash issues:** [Troubleshooting](troubleshooting.md) and [Examples](examples.md)  
 - **Wrong temperature:** [Transfer function](transfer_function.md) and [Hardware setup](hardware_setup.md)  
-- **API details:** [API reference](api_reference.md) and header [`mcp9700_thermistor.hpp`](https://github.com/N3b3x/hf-mcp9700-driver/blob/main/inc/mcp9700_thermistor.hpp) on GitHub  
+- **API details:** [API reference](api_reference.md) and header [`mcp9700_thermistor.hpp`](https://github.com/hardfoc/hf-mcp9700-driver/blob/main/inc/mcp9700_thermistor.hpp) on GitHub  
 
 **Next:** [Installation →](installation.md)

@@ -55,7 +55,7 @@ Pass custom **`v_zero_c`** and **`v_per_c`** to the constructor if you character
 
 ## Source excerpt (reference)
 
-See [`inc/mcp9700_thermistor.hpp`](https://github.com/N3b3x/hf-mcp9700-driver/blob/main/inc/mcp9700_thermistor.hpp) on GitHub for the full template. Core entry points:
+See [`inc/mcp9700_thermistor.hpp`](https://github.com/hardfoc/hf-mcp9700-driver/blob/main/inc/mcp9700_thermistor.hpp) on GitHub for the full template. Core entry points:
 
 ```cpp
 bool Initialize() noexcept;
