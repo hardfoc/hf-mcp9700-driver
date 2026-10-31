@@ -12,15 +12,15 @@ This branch contains the versioned documentation for this repository.
 
 ## Access
 
-- **Latest**: [https://N3b3x.github.io/hf-mcp9700-driver/](https://N3b3x.github.io/hf-mcp9700-driver/)
-- **All Versions**: [https://N3b3x.github.io/hf-mcp9700-driver/version_selector.html](https://N3b3x.github.io/hf-mcp9700-driver/version_selector.html)
+- **Latest**: [https://hardfoc.github.io/hf-mcp9700-driver/](https://hardfoc.github.io/hf-mcp9700-driver/)
+- **All Versions**: [https://hardfoc.github.io/hf-mcp9700-driver/version_selector.html](https://hardfoc.github.io/hf-mcp9700-driver/version_selector.html)
 
 ## Current Version
 
 - **Version**: development
 - **Type**: development
-- **Deployed**: 2026-06-15T01:38:56Z
-- **Commit**: 9ababb511984a20fbe786041f832f4356d6dae51
+- **Deployed**: 2026-10-31T08:23:29Z
+- **Commit**: 28f5e22961076a6881dff894b089485e7144e9c5
 
 ---
 
