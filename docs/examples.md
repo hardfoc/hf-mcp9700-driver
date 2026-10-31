@@ -30,12 +30,12 @@ cd examples/esp32
 
 ### Example source
 
-The sketch lives at [`examples/esp32/main/mcp9700_esp32c6_example.cpp`](https://github.com/N3b3x/hf-mcp9700-driver/blob/main/examples/esp32/main/mcp9700_esp32c6_example.cpp) — it wraps `hf::mcp9700::Mcp9700Thermistor` with an ESP-IDF ADC adapter class.
+The sketch lives at [`examples/esp32/main/mcp9700_esp32c6_example.cpp`](https://github.com/hardfoc/hf-mcp9700-driver/blob/main/examples/esp32/main/mcp9700_esp32c6_example.cpp) — it wraps `hf::mcp9700::Mcp9700Thermistor` with an ESP-IDF ADC adapter class.
 
 ### Full README
 
-See **[examples/esp32/README.md](https://github.com/N3b3x/hf-mcp9700-driver/blob/main/examples/esp32/README.md)** for `idf.py` commands, wiring table, and troubleshooting.
+See **[examples/esp32/README.md](https://github.com/hardfoc/hf-mcp9700-driver/blob/main/examples/esp32/README.md)** for `idf.py` commands, wiring table, and troubleshooting.
 
 ## Other platforms
 
-There is no second bundled example today; port by implementing the adapter in [Quick start](quickstart.md) against your HAL. Contributions welcome via [Issues](https://github.com/N3b3x/hf-mcp9700-driver/issues).
+There is no second bundled example today; port by implementing the adapter in [Quick start](quickstart.md) against your HAL. Contributions welcome via [Issues](https://github.com/hardfoc/hf-mcp9700-driver/issues).

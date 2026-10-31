@@ -11,7 +11,7 @@ permalink: /docs/troubleshooting/
 
 ## `mcp9700_version.h` not found
 
-Run CMake so [`cmake/hf_mcp9700_build_settings.cmake`](https://github.com/N3b3x/hf-mcp9700-driver/blob/main/cmake/hf_mcp9700_build_settings.cmake) can `configure_file` the version header, or add the generated include directory to your target. See [Installation](installation.md) and [CMake integration](cmake_integration.md).
+Run CMake so [`cmake/hf_mcp9700_build_settings.cmake`](https://github.com/hardfoc/hf-mcp9700-driver/blob/main/cmake/hf_mcp9700_build_settings.cmake) can `configure_file` the version header, or add the generated include directory to your target. See [Installation](installation.md) and [CMake integration](cmake_integration.md).
 
 ## Temperature clearly wrong
 
@@ -26,8 +26,8 @@ Return **0** only on success. Non-zero values are treated as failure by `Mcp9700
 
 ## CI / docs link check
 
-Workflows live under [`.github/workflows/`](https://github.com/N3b3x/hf-mcp9700-driver/tree/main/.github/workflows). Docs use [`_config/lychee.toml`](https://github.com/N3b3x/hf-mcp9700-driver/blob/main/_config/lychee.toml) to exclude vendor/submodule Markdown that is not maintained in-tree.
+Workflows live under [`.github/workflows/`](https://github.com/hardfoc/hf-mcp9700-driver/tree/main/.github/workflows). Docs use [`_config/lychee.toml`](https://github.com/hardfoc/hf-mcp9700-driver/blob/main/_config/lychee.toml) to exclude vendor/submodule Markdown that is not maintained in-tree.
 
 ## Still stuck?
 
-Open an [issue](https://github.com/N3b3x/hf-mcp9700-driver/issues) with hardware (MCU, supply, pin), IDF or toolchain version, and a minimal log.
+Open an [issue](https://github.com/hardfoc/hf-mcp9700-driver/issues) with hardware (MCU, supply, pin), IDF or toolchain version, and a minimal log.

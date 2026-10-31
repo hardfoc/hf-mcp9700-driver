@@ -14,25 +14,25 @@ This guide covers toolchain expectations, how to obtain the source, and how the 
 ## Prerequisites
 
 - **C++17** compiler (GCC 9+, Clang 9+, MSVC with `/std:c++17` or later) — see [cppreference](https://en.cppreference.com/w/cpp/17)
-- **CMake 3.16+** if you use the provided root [`CMakeLists.txt`](https://github.com/N3b3x/hf-mcp9700-driver/blob/main/CMakeLists.txt) or [`cmake/hf_mcp9700_build_settings.cmake`](https://github.com/N3b3x/hf-mcp9700-driver/blob/main/cmake/hf_mcp9700_build_settings.cmake)
+- **CMake 3.16+** if you use the provided root [`CMakeLists.txt`](https://github.com/hardfoc/hf-mcp9700-driver/blob/main/CMakeLists.txt) or [`cmake/hf_mcp9700_build_settings.cmake`](https://github.com/hardfoc/hf-mcp9700-driver/blob/main/cmake/hf_mcp9700_build_settings.cmake)
 
 ## Obtain the source
 
 ```bash
-git clone --recursive https://github.com/N3b3x/hf-mcp9700-driver.git
+git clone --recursive https://github.com/hardfoc/hf-mcp9700-driver.git
 cd hf-mcp9700-driver
 ```
 
-For ESP32 examples, the recursive clone ensures [`examples/esp32/scripts`](https://github.com/N3b3x/hf-mcp9700-driver/tree/main/examples/esp32) is populated.
+For ESP32 examples, the recursive clone ensures [`examples/esp32/scripts`](https://github.com/hardfoc/hf-mcp9700-driver/tree/main/examples/esp32) is populated.
 
 ## Header-only layout
 
 Add two include roots:
 
-1. **`inc/`** — [`mcp9700_thermistor.hpp`](https://github.com/N3b3x/hf-mcp9700-driver/blob/main/inc/mcp9700_thermistor.hpp) and friends  
+1. **`inc/`** — [`mcp9700_thermistor.hpp`](https://github.com/hardfoc/hf-mcp9700-driver/blob/main/inc/mcp9700_thermistor.hpp) and friends  
 2. **CMake binary dir** where `mcp9700_version.h` is generated (see below)
 
-Including [`cmake/hf_mcp9700_build_settings.cmake`](https://github.com/N3b3x/hf-mcp9700-driver/blob/main/cmake/hf_mcp9700_build_settings.cmake) runs `configure_file` on [`inc/mcp9700_version.h.in`](https://github.com/N3b3x/hf-mcp9700-driver/blob/main/inc/mcp9700_version.h.in) and emits:
+Including [`cmake/hf_mcp9700_build_settings.cmake`](https://github.com/hardfoc/hf-mcp9700-driver/blob/main/cmake/hf_mcp9700_build_settings.cmake) runs `configure_file` on [`inc/mcp9700_version.h.in`](https://github.com/hardfoc/hf-mcp9700-driver/blob/main/inc/mcp9700_version.h.in) and emits:
 
 `${CMAKE_CURRENT_BINARY_DIR}/hf_mcp9700_generated/mcp9700_version.h`
 

@@ -18,8 +18,8 @@ target_include_directories(my_target PRIVATE ${HF_MCP9700_PUBLIC_INCLUDE_DIRS})
 
 `HF_MCP9700_PUBLIC_INCLUDE_DIRS` contains:
 
-- The [`inc/`](https://github.com/N3b3x/hf-mcp9700-driver/tree/main/inc) directory  
-- The generated headers directory with [`mcp9700_version.h`](https://github.com/N3b3x/hf-mcp9700-driver/blob/main/inc/mcp9700_version.h.in)  
+- The [`inc/`](https://github.com/hardfoc/hf-mcp9700-driver/tree/main/inc) directory  
+- The generated headers directory with [`mcp9700_version.h`](https://github.com/hardfoc/hf-mcp9700-driver/blob/main/inc/mcp9700_version.h.in)  
 
 After `add_subdirectory(hf-mcp9700-driver)` (or equivalent), link:
 
