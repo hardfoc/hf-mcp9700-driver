@@ -1,7 +1,7 @@
 <map id="src/mcp9700_thermistor.ipp" name="src/mcp9700_thermistor.ipp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="23,5,226,31"/>
-<area shape="rect" id="Node000002" href="$mcp9700__thermistor_8hpp.html" title="Hardware&#45;agnostic MCP9700 / MCP9700A linear active thermistor driver." alt="" coords="21,79,228,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="127,44,127,79,122,79,122,44"/>
-<area shape="rect" id="Node000003" href="$mcp9700__esp32c6__example_8cpp.html" title="MCP9700 on ESP32&#45;C6 using ADC1 channel 0 (GPIO0) and hf::mcp9700::Mcp9700Thermistor." alt="" coords="5,152,244,192"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="127,118,127,152,122,152,122,118"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="23,5,225,33"/>
+<area shape="rect" id="Node000002" href="$mcp9700__thermistor_8hpp.html" title="Hardware&#45;agnostic MCP9700 / MCP9700A linear active thermistor driver." alt="" coords="21,81,227,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="125,46,127,81,121,80,123,51"/>
+<area shape="rect" id="Node000003" href="$mcp9700__esp32c6__example_8cpp.html" title="MCP9700 on ESP32&#45;C6 using ADC1 channel 0 (GPIO0) and hf::mcp9700::Mcp9700Thermistor." alt="" coords="5,157,243,201"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="126,123,126,157,122,155,122,127"/>
 </map>

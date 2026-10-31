@@ -102,22 +102,22 @@ $(function(){initNavTree('md_docs_2installation.html',''); initResizable(); });
 Prerequisites</h1>
 <ul>
 <li><b>C++17</b> compiler (GCC 9+, Clang 9+, MSVC with <code>/std:c++17</code> or later) — see <a href="https://en.cppreference.com/w/cpp/17">cppreference</a></li>
-<li><b>CMake 3.16+</b> if you use the provided root <a href="https://github.com/N3b3x/hf-mcp9700-driver/blob/main/CMakeLists.txt"><code>CMakeLists.txt</code></a> or <a href="https://github.com/N3b3x/hf-mcp9700-driver/blob/main/cmake/hf_mcp9700_build_settings.cmake"><code>cmake/hf_mcp9700_build_settings.cmake</code></a></li>
+<li><b>CMake 3.16+</b> if you use the provided root <a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/main/CMakeLists.txt"><code>CMakeLists.txt</code></a> or <a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/main/cmake/hf_mcp9700_build_settings.cmake"><code>cmake/hf_mcp9700_build_settings.cmake</code></a></li>
 </ul>
 <h1><a class="anchor" id="autotoc_md50"></a>
 Obtain the source</h1>
-<div class="fragment"><div class="line">git clone --recursive https://github.com/N3b3x/hf-mcp9700-driver.git</div>
+<div class="fragment"><div class="line">git clone --recursive https://github.com/hardfoc/hf-mcp9700-driver.git</div>
 <div class="line">cd hf-mcp9700-driver</div>
-</div><!-- fragment --><p>For ESP32 examples, the recursive clone ensures <a href="https://github.com/N3b3x/hf-mcp9700-driver/tree/main/examples/esp32"><code>examples/esp32/scripts</code></a> is populated.</p>
+</div><!-- fragment --><p>For ESP32 examples, the recursive clone ensures <a href="https://github.com/hardfoc/hf-mcp9700-driver/tree/main/examples/esp32"><code>examples/esp32/scripts</code></a> is populated.</p>
 <h1><a class="anchor" id="autotoc_md51"></a>
 Header-only layout</h1>
 <p>Add two include roots:</p>
 <ol type="1">
-<li>**<code>inc/</code>** — <a href="https://github.com/N3b3x/hf-mcp9700-driver/blob/main/inc/mcp9700_thermistor.hpp"><code>mcp9700_thermistor.hpp</code></a> and friends <br  />
+<li>**<code>inc/</code>** — <a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/main/inc/mcp9700_thermistor.hpp"><code>mcp9700_thermistor.hpp</code></a> and friends <br  />
 </li>
 <li><b>CMake binary dir</b> where <code>mcp9700_version.h</code> is generated (see below)</li>
 </ol>
-<p>Including <a href="https://github.com/N3b3x/hf-mcp9700-driver/blob/main/cmake/hf_mcp9700_build_settings.cmake"><code>cmake/hf_mcp9700_build_settings.cmake</code></a> runs <code>configure_file</code> on <a href="https://github.com/N3b3x/hf-mcp9700-driver/blob/main/inc/mcp9700_version.h.in"><code>inc/mcp9700_version.h.in</code></a> and emits:</p>
+<p>Including <a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/main/cmake/hf_mcp9700_build_settings.cmake"><code>cmake/hf_mcp9700_build_settings.cmake</code></a> runs <code>configure_file</code> on <a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/main/inc/mcp9700_version.h.in"><code>inc/mcp9700_version.h.in</code></a> and emits:</p>
 <p><code>${CMAKE_CURRENT_BINARY_DIR}/hf_mcp9700_generated/mcp9700_version.h</code></p>
 <h1><a class="anchor" id="autotoc_md52"></a>
 CMake (recommended)</h1>

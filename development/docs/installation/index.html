@@ -284,7 +284,7 @@
 
 <ul>
   <li><strong>C++17</strong> compiler (GCC 9+, Clang 9+, MSVC with <code class="language-plaintext highlighter-rouge">/std:c++17</code> or later) — see <a href="https://en.cppreference.com/w/cpp/17">cppreference</a></li>
-  <li><strong>CMake 3.16+</strong> if you use the provided root <a href="https://github.com/N3b3x/hf-mcp9700-driver/blob/main/CMakeLists.txt"><code class="language-plaintext highlighter-rouge">CMakeLists.txt</code></a> or <a href="https://github.com/N3b3x/hf-mcp9700-driver/blob/main/cmake/hf_mcp9700_build_settings.cmake"><code class="language-plaintext highlighter-rouge">cmake/hf_mcp9700_build_settings.cmake</code></a></li>
+  <li><strong>CMake 3.16+</strong> if you use the provided root <a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/main/CMakeLists.txt"><code class="language-plaintext highlighter-rouge">CMakeLists.txt</code></a> or <a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/main/cmake/hf_mcp9700_build_settings.cmake"><code class="language-plaintext highlighter-rouge">cmake/hf_mcp9700_build_settings.cmake</code></a></li>
 </ul>
 <h2 id="obtain-the-source">
   
@@ -297,11 +297,11 @@
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><div class="table-wrapper"><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
-</pre></td><td class="rouge-code"><pre>git clone <span class="nt">--recursive</span> https://github.com/N3b3x/hf-mcp9700-driver.git
+</pre></td><td class="rouge-code"><pre>git clone <span class="nt">--recursive</span> https://github.com/hardfoc/hf-mcp9700-driver.git
 <span class="nb">cd </span>hf-mcp9700-driver
 </pre></td></tr></tbody></table></div></code></pre></div></div>
 
-<p>For ESP32 examples, the recursive clone ensures <a href="https://github.com/N3b3x/hf-mcp9700-driver/tree/main/examples/esp32"><code class="language-plaintext highlighter-rouge">examples/esp32/scripts</code></a> is populated.</p>
+<p>For ESP32 examples, the recursive clone ensures <a href="https://github.com/hardfoc/hf-mcp9700-driver/tree/main/examples/esp32"><code class="language-plaintext highlighter-rouge">examples/esp32/scripts</code></a> is populated.</p>
 <h2 id="header-only-layout">
   
   
@@ -314,11 +314,11 @@
 <p>Add two include roots:</p>
 
 <ol>
-  <li><strong><code class="language-plaintext highlighter-rouge">inc/</code></strong> — <a href="https://github.com/N3b3x/hf-mcp9700-driver/blob/main/inc/mcp9700_thermistor.hpp"><code class="language-plaintext highlighter-rouge">mcp9700_thermistor.hpp</code></a> and friends</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">inc/</code></strong> — <a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/main/inc/mcp9700_thermistor.hpp"><code class="language-plaintext highlighter-rouge">mcp9700_thermistor.hpp</code></a> and friends</li>
   <li><strong>CMake binary dir</strong> where <code class="language-plaintext highlighter-rouge">mcp9700_version.h</code> is generated (see below)</li>
 </ol>
 
-<p>Including <a href="https://github.com/N3b3x/hf-mcp9700-driver/blob/main/cmake/hf_mcp9700_build_settings.cmake"><code class="language-plaintext highlighter-rouge">cmake/hf_mcp9700_build_settings.cmake</code></a> runs <code class="language-plaintext highlighter-rouge">configure_file</code> on <a href="https://github.com/N3b3x/hf-mcp9700-driver/blob/main/inc/mcp9700_version.h.in"><code class="language-plaintext highlighter-rouge">inc/mcp9700_version.h.in</code></a> and emits:</p>
+<p>Including <a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/main/cmake/hf_mcp9700_build_settings.cmake"><code class="language-plaintext highlighter-rouge">cmake/hf_mcp9700_build_settings.cmake</code></a> runs <code class="language-plaintext highlighter-rouge">configure_file</code> on <a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/main/inc/mcp9700_version.h.in"><code class="language-plaintext highlighter-rouge">inc/mcp9700_version.h.in</code></a> and emits:</p>
 
 <p><code class="language-plaintext highlighter-rouge">${CMAKE_CURRENT_BINARY_DIR}/hf_mcp9700_generated/mcp9700_version.h</code></p>
 <h2 id="cmake-recommended">

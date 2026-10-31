@@ -98,7 +98,7 @@ $(function(){initNavTree('index.html',''); initResizable(); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="md_README"></a> <b>Microchip <a href="https://www.microchip.com/en-us/product/MCP9700">MCP9700</a> / <a href="https://www.microchip.com/en-us/product/MCP9700A">MCP9700A</a> linear active thermistor — analog voltage to °C</b></p>
-<p><a href="https://en.cppreference.com/w/cpp/17"><img src="https://img.shields.io/badge/C%2B%2B-17-blue.svg" alt="C++" style="pointer-events: none;" class="inline"/></a> <a href="https://www.gnu.org/licenses/gpl-3.0"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License" style="pointer-events: none;" class="inline"/></a> <a href="https://github.com/N3b3x/hf-mcp9700-driver/actions/workflows/esp32-examples-build-ci.yml"><img src="https://github.com/N3b3x/hf-mcp9700-driver/actions/workflows/esp32-examples-build-ci.yml/badge.svg?branch=main" alt="CI" style="pointer-events: none;" class="inline"/></a> <a href="https://n3b3x.github.io/hf-mcp9700-driver/"><img src="https://img.shields.io/badge/docs-GitHub%20Pages-blue" alt="Docs" class="inline"/></a></p>
+<p><a href="https://en.cppreference.com/w/cpp/17"><img src="https://img.shields.io/badge/C%2B%2B-17-blue.svg" alt="C++" style="pointer-events: none;" class="inline"/></a> <a href="https://www.gnu.org/licenses/gpl-3.0"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License" style="pointer-events: none;" class="inline"/></a> <a href="https://github.com/hardfoc/hf-mcp9700-driver/actions/workflows/esp32-examples-build-ci.yml"><img src="https://github.com/hardfoc/hf-mcp9700-driver/actions/workflows/esp32-examples-build-ci.yml/badge.svg?branch=main" alt="CI" style="pointer-events: none;" class="inline"/></a> <a href="https://hardfoc.github.io/hf-mcp9700-driver/"><img src="https://img.shields.io/badge/docs-GitHub%20Pages-blue" alt="Docs" class="inline"/></a></p>
 <h1><a class="anchor" id="autotoc_md1"></a>
 📚 Table of Contents</h1>
 <ol type="1">
@@ -116,7 +116,7 @@ $(function(){initNavTree('index.html',''); initResizable(); });
 <h1><a class="anchor" id="autotoc_md2"></a>
 📦 Overview</h1>
 <blockquote class="doxtable">
-<p>&zwj;<b>📖 <a href="https://n3b3x.github.io/hf-mcp9700-driver/">📚🌐 Live Complete Documentation</a></b> — Interactive guides, hardware diagrams, transfer function, and step-by-step tutorials. </p>
+<p>&zwj;<b>📖 <a href="https://hardfoc.github.io/hf-mcp9700-driver/">📚🌐 Live Complete Documentation</a></b> — Interactive guides, hardware diagrams, transfer function, and step-by-step tutorials. </p>
 </blockquote>
 <p>The MCP9700 family outputs an <b>analog voltage proportional to temperature</b>. This repository provides a <b>header-only</b> C++17 template, <code><a class="el" href="classhf_1_1mcp9700_1_1Mcp9700Thermistor.html" title="Template driver for MCP9700 family sensors on a multiplexed ADC.">hf::mcp9700::Mcp9700Thermistor</a>&lt;AdcType&gt;</code>, that converts ADC readings in <b>volts</b> into <b>degrees Celsius</b> using the <b>typical</b> linear model from the Microchip datasheet:</p>
 <p><code>T_C ≈ (Vout − 0.5 V) / (10 mV/°C)</code> — override <code>v_zero_c</code> and <code>v_per_c</code> in the constructor when you calibrate or use alternate datasheet coefficients.</p>
@@ -220,7 +220,7 @@ $(function(){initNavTree('index.html',''); initResizable(); });
 <td class="markdownTableBodyNone"><b><a href="examples/esp32/main/">mcp9700_esp32c6_example</a></b>   </td><td class="markdownTableBodyNone">ESP32-C6 ADC1 CH0 (GPIO0) one-shot read with optional curve calibration   </td></tr>
 </table>
 <p>Clone <b>with submodules</b> so <code>examples/esp32/scripts</code> (build/flash helpers) is present:</p>
-<div class="fragment"><div class="line">git clone --recursive https://github.com/N3b3x/hf-mcp9700-driver.git</div>
+<div class="fragment"><div class="line">git clone --recursive https://github.com/hardfoc/hf-mcp9700-driver.git</div>
 <div class="line"># or, after a non-recursive clone:</div>
 <div class="line">git submodule update --init --recursive</div>
 </div><!-- fragment --><p>Then:</p>
