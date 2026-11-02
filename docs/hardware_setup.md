@@ -1,12 +1,3 @@
----
-layout: default
-title: "🔌 Hardware setup — ESP32-C6"
-description: "Wiring MCP9700 to ESP32-C6 ADC for the stock example"
-nav_order: 6
-parent: "📚 Documentation"
-permalink: /docs/hardware_setup/
----
-
 # Hardware setup — ESP32-C6 (on-chip ADC)
 
 The stock ESP-IDF example uses the **internal SAR ADC** to sample **MCP9700 Vout**. External SPI/I2C ADCs are not required.

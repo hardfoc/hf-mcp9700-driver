@@ -1,12 +1,3 @@
----
-layout: default
-title: "⚡ Quick start"
-description: "Minimal ADC adapter and first temperature read"
-nav_order: 4
-parent: "📚 Documentation"
-permalink: /docs/quickstart/
----
-
 # Quick start
 
 ## 1. Implement the adapter contract

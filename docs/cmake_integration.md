@@ -1,12 +1,3 @@
----
-layout: default
-title: "⚙️ CMake integration"
-description: "Embed hf-mcp9700-driver in CMake projects"
-nav_order: 7
-parent: "📚 Documentation"
-permalink: /docs/cmake_integration/
----
-
 # CMake integration
 
 ## Embedded in a larger project (HardFOC pattern)

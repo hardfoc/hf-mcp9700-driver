@@ -1,12 +1,3 @@
----
-layout: default
-title: "📈 Transfer function"
-description: "MCP9700 voltage-to-temperature model used by the driver"
-nav_order: 5
-parent: "📚 Documentation"
-permalink: /docs/transfer_function/
----
-
 # Transfer function
 
 The driver uses the **typical** linear relationship from the Microchip **[MCP9700 family datasheet](https://www.microchip.com/en-us/product/MCP9700)** (see also [MCP9700A](https://www.microchip.com/en-us/product/MCP9700A)):

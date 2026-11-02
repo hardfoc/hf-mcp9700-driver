@@ -1,12 +1,3 @@
----
-layout: default
-title: "🐛 Troubleshooting"
-description: "Common MCP9700 driver integration issues"
-nav_order: 10
-parent: "📚 Documentation"
-permalink: /docs/troubleshooting/
----
-
 # Troubleshooting
 
 ## `mcp9700_version.h` not found

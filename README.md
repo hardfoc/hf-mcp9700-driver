@@ -1,11 +1,3 @@
----
-layout: default
-title: "HardFOC MCP9700 Driver"
-description: "Header-only MCP9700/MCP9700A linear thermistor driver with ESP32-C6 ADC example"
-nav_order: 1
-permalink: /
----
-
 # HF-MCP9700 Driver
 
 **Microchip [MCP9700](https://www.microchip.com/en-us/product/MCP9700) / [MCP9700A](https://www.microchip.com/en-us/product/MCP9700A) linear active thermistor — analog voltage to °C**
@@ -15,19 +7,19 @@ permalink: /
 [![CI](https://github.com/hardfoc/hf-mcp9700-driver/actions/workflows/esp32-examples-build-ci.yml/badge.svg?branch=main)](https://github.com/hardfoc/hf-mcp9700-driver/actions/workflows/esp32-examples-build-ci.yml)
 [![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://hardfoc.github.io/hf-mcp9700-driver/)
 
-## 📚 Table of Contents
-1. [Overview](#-overview)
-2. [Features](#-features)
-3. [Quick Start](#-quick-start)
-4. [Installation](#-installation)
-5. [API Reference](#-api-reference)
-6. [Examples](#-examples)
-7. [Documentation](#-documentation)
-8. [References](#-references)
-9. [Contributing](#-contributing)
-10. [License](#-license)
+## Table of Contents
+1. [Overview](#overview)
+2. [Features](#features)
+3. [Quick Start](#quick-start)
+4. [Installation](#installation)
+5. [API Reference](#api-reference)
+6. [Examples](#examples)
+7. [Documentation](#documentation)
+8. [References](#references)
+9. [Contributing](#contributing)
+10. [License](#license)
 
-## 📦 Overview
+## Overview
 
 > **📖 [📚🌐 Live Complete Documentation](https://hardfoc.github.io/hf-mcp9700-driver/)** —
 > Interactive guides, hardware diagrams, transfer function, and step-by-step tutorials.
@@ -47,7 +39,7 @@ You implement a small **ADC adapter** with `EnsureInitialized()` and
 
 ![MCP9700 signal-processing chain](docs/assets/mcp9700-signal-flow.svg)
 
-### 🔀 Chip Compatibility
+### Chip Compatibility
 
 The MCP9700A is a higher-accuracy pin-compatible variant of the MCP9700. The driver
 handles both transparently — choose the typical coefficients (defaults) or override
@@ -65,7 +57,7 @@ them per part:
 Override the constructor's `v_zero_c` / `v_per_c` to use min/max datasheet
 coefficients or per-unit calibration.
 
-## ✨ Features
+## Features
 
 - ✅ **Header-only C++17**: no static library required for the driver itself
 - ✅ **Hardware Agnostic**: ADC adapter contract works with any ESP-IDF, STM32 HAL, Linux iio, etc.
@@ -76,7 +68,7 @@ coefficients or per-unit calibration.
 - ✅ **ESP-IDF ESP32-C6** example: `adc_oneshot`, optional **curve calibration**, default **ADC1 CH0 (GPIO0)**
 - ✅ **CI** for ESP32 examples and **docs link checking** aligned with other HardFOC drivers
 
-## 🚀 Quick Start
+## Quick Start
 
 ```cpp
 #include "mcp9700_thermistor.hpp"
@@ -106,7 +98,7 @@ if (mcp.Initialize()) {
 
 For detailed setup, see [Installation](docs/installation.md) and [Quick Start Guide](docs/quickstart.md).
 
-## 🔧 Installation
+## Installation
 
 1. **Clone or copy** the driver files into your project (header-only — no build step)
 2. **Implement the ADC adapter** for your platform (see [Quick Start](docs/quickstart.md))
@@ -118,7 +110,7 @@ For detailed setup, see [Installation](docs/installation.md) and [Quick Start Gu
 
 For detailed installation instructions, see [docs/installation.md](docs/installation.md).
 
-## 📖 API Reference
+## API Reference
 
 | Method | Description |
 |--------|-------------|
@@ -131,7 +123,7 @@ For detailed installation instructions, see [docs/installation.md](docs/installa
 
 For complete API documentation, see [docs/api_reference.md](docs/api_reference.md).
 
-## 📊 Examples
+## Examples
 
 | Example | Description |
 |---------|-------------|
@@ -156,7 +148,7 @@ cd examples/esp32
 
 See [examples/esp32/README.md](examples/esp32/README.md) for `idf.py` usage, wiring, and logs.
 
-## 📚 Documentation
+## Documentation
 
 Complete documentation is available in the [docs directory](docs/index.md):
 
@@ -173,7 +165,7 @@ Complete documentation is available in the [docs directory](docs/index.md):
 | [🛠️ Troubleshooting](docs/troubleshooting.md) | Common failures and remedies |
 | [📄 Datasheet & manufacturer links](docs/datasheet/README.md) | Official PDFs and product pages |
 
-## 🔗 References
+## References
 
 | Resource | Link |
 |----------|------|
@@ -182,10 +174,10 @@ Complete documentation is available in the [docs directory](docs/index.md):
 | ESP-IDF ADC (ESP32-C6) | <https://docs.espressif.com/projects/esp-idf/en/stable/esp32c6/api-reference/peripherals/adc.html> |
 | C++17 language reference | <https://en.cppreference.com/w/cpp/17> |
 
-## 🤝 Contributing
+## Contributing
 
 Pull requests and suggestions are welcome! Please follow the existing code style and include tests for new features.
 
-## 📄 License
+## License
 
 This project is licensed under the **GNU General Public License v3.0** — see the [LICENSE](LICENSE) file for details.

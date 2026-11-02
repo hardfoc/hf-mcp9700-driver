@@ -1,12 +1,3 @@
----
-layout: default
-title: "📖 API reference"
-description: "Mcp9700Thermistor template and adapter contract"
-nav_order: 9
-parent: "📚 Documentation"
-permalink: /docs/api_reference/
----
-
 # API reference
 
 Full header: [`inc/mcp9700_thermistor.hpp`](https://github.com/hardfoc/hf-mcp9700-driver/blob/main/inc/mcp9700_thermistor.hpp) · implementation: [`src/mcp9700_thermistor.ipp`](https://github.com/hardfoc/hf-mcp9700-driver/blob/main/src/mcp9700_thermistor.ipp)

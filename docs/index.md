@@ -1,13 +1,3 @@
----
-layout: default
-title: "📚 Documentation"
-description: "Complete documentation for the HardFOC MCP9700 driver"
-nav_order: 2
-parent: "HardFOC MCP9700 Driver"
-permalink: /docs/
-has_children: true
----
-
 # HF-MCP9700 documentation
 
 Welcome. This site mirrors the [`docs/`](https://github.com/hardfoc/hf-mcp9700-driver/tree/main/docs) folder in the repository and adds navigation, search, and diagrams for the **MCP9700 / MCP9700A** linear active thermistor driver.

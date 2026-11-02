@@ -1,0 +1,13 @@
+---
+# Site navigation (mkdocs-awesome-nav): the tabs and sidebar, in this order.
+nav:
+  - Home: index.md
+  - "Installation": installation.md
+  - "Quick start": quickstart.md
+  - "Transfer function": transfer_function.md
+  - "Hardware setup — ESP32-C6": hardware_setup.md
+  - "CMake integration": cmake_integration.md
+  - "Examples": examples.md
+  - "API reference": api_reference.md
+  - "Troubleshooting": troubleshooting.md
+  - "Datasheet & manufacturer": datasheet/README.md

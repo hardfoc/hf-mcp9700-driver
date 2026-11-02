@@ -1,12 +1,3 @@
----
-layout: default
-title: "💡 Examples"
-description: "ESP32-C6 ESP-IDF example for the MCP9700 driver"
-nav_order: 8
-parent: "📚 Documentation"
-permalink: /docs/examples/
----
-
 # Examples
 
 ## ESP32-C6 (`examples/esp32`)

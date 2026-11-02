@@ -1,12 +1,3 @@
----
-layout: default
-title: "📄 Datasheet & manufacturer"
-description: "Official Microchip documentation for MCP9700 and MCP9700A"
-nav_order: 11
-parent: "📚 Documentation"
-permalink: /docs/datasheet/
----
-
 # Datasheet and manufacturer resources
 
 This repository **does not** redistribute Microchip PDFs. Use the official sources below for electrical characteristics, accuracy, supply range, pinouts, and package drawings.

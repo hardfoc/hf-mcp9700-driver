@@ -1,12 +1,3 @@
----
-layout: default
-title: "🛠️ Installation"
-description: "Install and integrate the HF-MCP9700 header-only driver"
-nav_order: 3
-parent: "📚 Documentation"
-permalink: /docs/installation/
----
-
 # Installation
 
 This guide covers toolchain expectations, how to obtain the source, and how the **generated** `mcp9700_version.h` fits into your include path.
