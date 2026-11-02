@@ -32,7 +32,7 @@ the generated `mcp9700_version.h`) and requires C++17 (`cxx_std_17`), so your ta
 
 | Option | Default | Effect |
 | --- | --- | --- |
-| `HF_MCP9700_ENABLE_WARNINGS` | `OFF` | Adds `-Wall -Wextra -Wpedantic` to targets that link the driver |
+| `HF_MCP9700_ENABLE_WARNINGS` | `OFF` | Deprecated, no effect (prints a deprecation message). Set warnings on your own target |
 | `HF_MCP9700_BUILD_TESTS` | `OFF` | Builds the host unit tests in `tests/` ([Testing and CI](testing.md)) |
 
 ## Install and find_package

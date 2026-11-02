@@ -25,6 +25,10 @@ code that used the affected API; together they call for a major version bump at 
 
 ### Fixed
 
+- `HF_MCP9700_ENABLE_WARNINGS` no longer adds `-Wall -Wextra -Wpedantic` as `INTERFACE` options of `hf::mcp9700`,
+  which changed the warning flags of every target that linked the driver. The option is deprecated and has no
+  effect; it prints a deprecation message when set. Add warnings to your own target instead.
+
 - `Initialize()` now rejects a NaN or infinite slope or offset (`Error::kInvalidCoefficients`). Before, only a
   slope of zero or below was caught, and a NaN or infinite coefficient made every reading NaN, 0 or infinite.
 

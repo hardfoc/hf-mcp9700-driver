@@ -32,9 +32,14 @@ set_target_properties(${HF_MCP9700_TARGET_NAME} PROPERTIES EXPORT_NAME mcp9700)
 
 add_library(hf::mcp9700 ALIAS ${HF_MCP9700_TARGET_NAME})
 
-option(HF_MCP9700_ENABLE_WARNINGS "Enable compiler warnings for MCP9700 consumers" OFF)
+# Deprecated, no effect. It used to add -Wall -Wextra -Wpedantic as INTERFACE options, which
+# changed the warning flags of every target that linked the driver (and of installed consumers).
+# Set warnings on your own targets; the host tests set them PRIVATE.
+option(HF_MCP9700_ENABLE_WARNINGS "Deprecated, no effect: set warnings on your own targets" OFF)
 if(HF_MCP9700_ENABLE_WARNINGS)
-  target_compile_options(${HF_MCP9700_TARGET_NAME} INTERFACE -Wall -Wextra -Wpedantic)
+  message(DEPRECATION
+    "HF_MCP9700_ENABLE_WARNINGS has no effect and will be removed: the driver no longer adds "
+    "warning flags to the targets that link it. Set them on your own target instead.")
 endif()
 
 option(HF_MCP9700_BUILD_TESTS "Build the host unit tests in tests/" OFF)
