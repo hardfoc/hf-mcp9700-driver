@@ -2,8 +2,8 @@
 
 The two coefficients the driver uses, where their values come from, and how to calibrate them for one sensor.
 
-The driver has no configuration structure and no registers: the constructor's two coefficient arguments are the
-whole configuration. Snippets are compiled from [`tests/docs/configuration.cpp`](../tests/docs/configuration.cpp).
+The driver has no configuration structure and no registers: the constructor's two coefficient arguments and the
+plausibility range are the whole configuration. Snippets are compiled from [`tests/docs/configuration.cpp`](../tests/docs/configuration.cpp).
 
 ## Constructor arguments
 
@@ -64,8 +64,24 @@ Store the coefficients per unit (non-volatile memory, a calibration table) and p
 ```
 
 The MCP9701 and MCP9701A use the same equation with these typicals, a 3.1 V to 5.5 V supply and an output of
-200 mV to 3 V. The driver was written and tested for the MCP9700 family; with these coefficients it computes the
-MCP9701 transfer function the same way.
+200 mV to 3 V, specified from −10 °C to +125 °C, so the snippet narrows the
+[plausibility range](#plausibility-range) as well. The driver was written and tested for the MCP9700 family; with
+these coefficients it computes the MCP9701 transfer function the same way.
+
+## Plausibility range
+
+`ReadTemperatureCelsius()` fails with `Error::kOutOfRange` when the result is outside the specified temperature
+range widened by a margin on both sides ([API guide](api-guide.md#handle-errors)). Set it with
+`SetSpecifiedRange(min_celsius, max_celsius, margin_celsius)`.
+
+| Part | `min_celsius` | `max_celsius` | Datasheet |
+| --- | --- | --- | --- |
+| MCP9700, MCP9700A, MCP9700B (default) | −40 | +125 | Temperature Characteristics, specified range |
+| MCP9700, MCP9700B high temperature (SOT-23-3, SC70-5) | −40 | +150 | Temperature Characteristics |
+| MCP9701, MCP9701A | −10 | +125 | Temperature Characteristics |
+
+The margin defaults to 8 °C (`kDefaultRangeMarginCelsius`). It must be zero or more; a minimum that is not below
+the maximum, or a value that is not finite, is refused and the previous range is kept.
 
 ## Next
 

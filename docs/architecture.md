@@ -55,7 +55,7 @@ driver calls them. The cost is that the driver type names the adapter: `Mcp9700T
 | The driver | Your adapter or application |
 | --- | --- |
 | The transfer function and its two coefficients | ADC set-up, channel mapping, calibration, dividers |
-| The initialised state and the argument checks | Averaging, filtering, range checks |
+| The initialised state, the argument checks and the plausibility range check | Averaging, filtering, application limits |
 | Returning `false` on any failure | Deciding what a failure means for your system |
 
 The driver holds a non-owning pointer to your adapter: the adapter must outlive it. The object cannot be copied.

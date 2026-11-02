@@ -49,16 +49,28 @@ bool read_checked(Sensor& sensor, float* celsius) {
   // --8<-- [start:errors]
   float t = 0.0F;
   if (!sensor.ReadTemperatureCelsius(&t)) {
-    return false;                                 // not initialised, null output or adapter error
-  }
-  // The driver does not range-check. VOUT is 100 mV to 1.75 V over -40 C to +125 C, so a reading far
-  // outside that range means an open input, a short or a wrong ADC scale, not a temperature.
-  if (t < -45.0F || t > 130.0F) {
-    return false;
+    switch (sensor.LastError()) {
+      case hf::mcp9700::Error::kOutOfRange:       // open, grounded or shorted input, or wrong ADC scale
+        std::printf("VOUT outside the sensor's range\n");
+        break;
+      case hf::mcp9700::Error::kAdcError:         // ReadChannelV() returned non-zero
+        std::printf("ADC read failed\n");
+        break;
+      default:                                    // not initialised or null output
+        break;
+    }
+    return false;                                 // t is unchanged on failure
   }
   *celsius = t;
   return true;
   // --8<-- [end:errors]
+}
+
+bool set_range(Sensor& sensor) {
+  // --8<-- [start:range]
+  // High-temperature MCP9700 / MCP9700B (SOT-23-3, SC70-5): specified to +150 C. Keep the 8 C margin.
+  return sensor.SetSpecifiedRange(-40.0F, 150.0F);
+  // --8<-- [end:range]
 }
 
 void lifecycle(Sensor& sensor) {

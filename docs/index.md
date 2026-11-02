@@ -63,7 +63,8 @@ Driver mode
   datasheet's first-order transfer function. See [Transfer function](transfer-function.md).
 - **Your calibration.** Pass your own offset and slope to the constructor after a one-point or two-point
   calibration, or the MCP9701 coefficients. See [Configuration](configuration.md).
-- **Errors you can act on.** Every call returns `bool`; a failed read leaves your value untouched. See
+- **Errors you can act on.** Every call returns `bool` and `LastError()` says why; an open, grounded or shorted
+  input fails instead of reading −50 °C. A failed read leaves your value untouched. See
   [API guide](api-guide.md#handle-errors).
 - **Zero-overhead portability.** The adapter is a template parameter with two methods: no virtual calls, no heap,
   no RTOS dependency. See [Porting](porting.md).

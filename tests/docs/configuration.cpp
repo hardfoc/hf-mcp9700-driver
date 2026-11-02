@@ -40,9 +40,11 @@ bool make_sensors(MyAdc& adc) {
 // MCP9701 / MCP9701A: same transfer function, different typicals (datasheet DC characteristics).
 constexpr float kMcp9701VoltsAtZeroC = 0.400F;     // 400 mV
 constexpr float kMcp9701VoltsPerCelsius = 0.0195F; // 19.5 mV/°C
-// --8<-- [end:mcp9701]
+constexpr float kMcp9701MinCelsius = -10.0F;       // specified range -10 °C to +125 °C
+constexpr float kMcp9701MaxCelsius = 125.0F;
 
 bool make_mcp9701(MyAdc& adc) {
   hf::mcp9700::Mcp9700Thermistor<MyAdc> sensor(&adc, 2, kMcp9701VoltsAtZeroC, kMcp9701VoltsPerCelsius);
-  return sensor.Initialize();
+  return sensor.SetSpecifiedRange(kMcp9701MinCelsius, kMcp9701MaxCelsius) && sensor.Initialize();
 }
+// --8<-- [end:mcp9701]

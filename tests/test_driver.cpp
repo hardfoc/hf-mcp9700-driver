@@ -7,6 +7,7 @@
 
 #include "mcp9700_thermistor.hpp"
 
+#include <cmath>
 #include <cstring>
 
 using Sensor = hf::mcp9700::Mcp9700Thermistor<MockAdc>;
@@ -108,6 +109,107 @@ TEST_CASE("An adapter error fails the read and leaves the output untouched") {
   CHECK_NEAR(t, 123.0, 0.0);
   adc.read_error = -1;
   CHECK(!sensor.ReadTemperatureCelsius(&t));
+}
+
+TEST_CASE("An open or grounded input (0 V) fails the read instead of returning -50 C") {
+  MockAdc adc;
+  Sensor sensor(&adc, 0);
+  REQUIRE(sensor.Initialize());
+  adc.volts = 0.0F;
+  float t = 123.0F;
+  CHECK(!sensor.ReadTemperatureCelsius(&t));
+  CHECK_NEAR(t, 123.0, 0.0);
+  CHECK(sensor.LastError() == hf::mcp9700::Error::kOutOfRange);
+}
+
+TEST_CASE("A shorted-to-supply input, a millivolt adapter and NaN fail the read") {
+  MockAdc adc;
+  Sensor sensor(&adc, 0);
+  REQUIRE(sensor.Initialize());
+  float t = 123.0F;
+  for (const float v : {3.3F, 750.0F, std::nanf(""), -0.2F}) {
+    adc.volts = v;
+    CHECK(!sensor.ReadTemperatureCelsius(&t));
+    CHECK(sensor.LastError() == hf::mcp9700::Error::kOutOfRange);
+  }
+  CHECK_NEAR(t, 123.0, 0.0);
+}
+
+TEST_CASE("Readings inside the specified range plus the margin are accepted") {
+  MockAdc adc;
+  Sensor sensor(&adc, 0);
+  REQUIRE(sensor.Initialize());
+  CHECK_NEAR(sensor.SpecifiedMinCelsius(), -40.0, 0.0);
+  CHECK_NEAR(sensor.SpecifiedMaxCelsius(), 125.0, 0.0);
+  CHECK_NEAR(sensor.RangeMarginCelsius(), 8.0, 0.0);
+  float t = 0.0F;
+  adc.volts = 0.025F;  // -47.5 C: inside the -48 C limit
+  CHECK(sensor.ReadTemperatureCelsius(&t));
+  CHECK(sensor.LastError() == hf::mcp9700::Error::kNone);
+  adc.volts = 1.825F;  // +132.5 C: inside the +133 C limit
+  CHECK(sensor.ReadTemperatureCelsius(&t));
+  adc.volts = 0.015F;  // -48.5 C
+  CHECK(!sensor.ReadTemperatureCelsius(&t));
+  adc.volts = 1.835F;  // +133.5 C
+  CHECK(!sensor.ReadTemperatureCelsius(&t));
+}
+
+TEST_CASE("SetSpecifiedRange moves the limits and rejects invalid ranges") {
+  MockAdc adc;
+  Sensor sensor(&adc, 0);
+  REQUIRE(sensor.Initialize());
+  float t = 0.0F;
+  adc.volts = 2.0F;  // +150 C: high-temperature parts only
+  CHECK(!sensor.ReadTemperatureCelsius(&t));
+  REQUIRE(sensor.SetSpecifiedRange(-40.0F, 150.0F, 2.0F));
+  CHECK(sensor.ReadTemperatureCelsius(&t));
+  CHECK_NEAR(t, 150.0, kTol);
+
+  CHECK(!sensor.SetSpecifiedRange(10.0F, 10.0F));
+  CHECK(sensor.LastError() == hf::mcp9700::Error::kInvalidArgument);
+  CHECK(!sensor.SetSpecifiedRange(0.0F, 100.0F, -1.0F));
+  CHECK(!sensor.SetSpecifiedRange(std::nanf(""), 100.0F));
+  CHECK_NEAR(sensor.SpecifiedMaxCelsius(), 150.0, 0.0);
+  CHECK_NEAR(sensor.RangeMarginCelsius(), 2.0, 0.0);
+}
+
+TEST_CASE("MCP9701 range: 0 V is rejected with the MCP9701 coefficients and -10 C .. +125 C") {
+  MockAdc adc;
+  Sensor sensor(&adc, 0, 0.400F, 0.0195F);
+  REQUIRE(sensor.Initialize());
+  REQUIRE(sensor.SetSpecifiedRange(-10.0F, 125.0F));
+  float t = 0.0F;
+  adc.volts = 0.0F;  // -20.5 C
+  CHECK(!sensor.ReadTemperatureCelsius(&t));
+  adc.volts = 0.200F;  // -10.3 C, the low end of the datasheet's 200 mV .. 3 V
+  CHECK(sensor.ReadTemperatureCelsius(&t));
+}
+
+TEST_CASE("LastError reports why a call failed") {
+  MockAdc adc;
+  Sensor sensor(&adc, 0);
+  float t = 0.0F;
+  CHECK(!sensor.ReadTemperatureCelsius(&t));
+  CHECK(sensor.LastError() == hf::mcp9700::Error::kNotInitialized);
+  REQUIRE(sensor.Initialize());
+  CHECK(sensor.LastError() == hf::mcp9700::Error::kNone);
+  CHECK(!sensor.ReadTemperatureCelsius(nullptr));
+  CHECK(sensor.LastError() == hf::mcp9700::Error::kInvalidArgument);
+  adc.read_error = 2;
+  CHECK(!sensor.ReadTemperatureCelsius(&t));
+  CHECK(sensor.LastError() == hf::mcp9700::Error::kAdcError);
+
+  Sensor no_adc(nullptr, 0);
+  CHECK(!no_adc.Initialize());
+  CHECK(no_adc.LastError() == hf::mcp9700::Error::kInvalidArgument);
+  Sensor bad_slope(&adc, 0, 0.5F, 0.0F);
+  CHECK(!bad_slope.Initialize());
+  CHECK(bad_slope.LastError() == hf::mcp9700::Error::kInvalidCoefficients);
+  MockAdc broken;
+  broken.init_ok = false;
+  Sensor dead(&broken, 0);
+  CHECK(!dead.Initialize());
+  CHECK(dead.LastError() == hf::mcp9700::Error::kAdcError);
 }
 
 TEST_CASE("The version string matches the CMake version") {

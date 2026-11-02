@@ -38,7 +38,7 @@ int print_board_temperature(MyAdc& adc) {
 
   float celsius = 0.0F;
   if (!sensor.ReadTemperatureCelsius(&celsius)) { // 2. one ADC read, (V - 0.5 V) / 0.01 V/°C
-    return -2;                                    // the adapter returned non-zero
+    return -2;                                    // ADC error, or VOUT outside the sensor's range
   }
   std::printf("Board temperature: %.1f C\n", static_cast<double>(celsius));
   return 0;
@@ -52,7 +52,10 @@ int print_board_temperature(MyAdc& adc) {
   10 mV/°C.
 - Takes per-unit coefficients for a one-point or two-point calibration, or for the MCP9701 family.
 - Works with any ADC through an adapter with two methods: `EnsureInitialized()` and `ReadChannelV()`.
-- Returns `bool` from every call that can fail and never writes your value on a failed read.
+- Returns `bool` from every call that can fail, reports why through `LastError()`, and never writes your value on
+  a failed read.
+- Rejects readings outside the sensor's specified range (open, grounded or shorted input) instead of returning
+  −50 °C.
 - Header-only C++17: no heap, no exceptions, no RTOS, no virtual calls.
 
 ## Install
