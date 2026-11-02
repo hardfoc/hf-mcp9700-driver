@@ -23,12 +23,18 @@ code that used the affected API; together they call for a major version bump at 
   +70 °C, not ±2 °C and ±1 °C typical; the output is not ratiometric to VDD; the README no longer lists a
   `ReadVoltage()` call that did not exist then.
 
+### Fixed
+
+- `Initialize()` now rejects a NaN or infinite slope or offset (`Error::kInvalidCoefficients`). Before, only a
+  slope of zero or below was caught, and a NaN or infinite coefficient made every reading NaN, 0 or infinite.
+
 ### Added
 
 - `ReadVoltage(float*)`: the raw sensor output voltage, without conversion or range check.
 - Plausibility range check on `ReadTemperatureCelsius()`, configurable with `SetSpecifiedRange()`;
   `kDefaultSpecifiedMinCelsius`, `kDefaultSpecifiedMaxCelsius`, `kDefaultRangeMarginCelsius`.
 - `hf::mcp9700::Error` and `LastError()`: why the last call failed.
+- `HasValidCoefficients()`: whether the offset and slope can be used.
 
 - Host unit tests (`HF_MCP9700_BUILD_TESTS`) that run the driver against a scripted ADC adapter.
 

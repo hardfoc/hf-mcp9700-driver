@@ -22,7 +22,7 @@ bool Mcp9700Thermistor<AdcType>::Initialize() noexcept {
         last_error_ = Error::kInvalidArgument;
         return false;
     }
-    if (v_per_c_ <= 0.0F) {
+    if (!HasValidCoefficients()) {
         last_error_ = Error::kInvalidCoefficients;
         return false;
     }

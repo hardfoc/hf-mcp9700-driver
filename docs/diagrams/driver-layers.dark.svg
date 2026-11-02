@@ -38,10 +38,12 @@
 <text x="56" y="375.5" font-size="16" font-weight="700" fill="#C7CBFF">SpecifiedMaxCelsius()</text>
 <rect x="260.3" y="357.4" width="201" height="26" rx="13" fill="#1C1F3D" stroke="#3B4080" stroke-width="1"/>
 <text x="268.3" y="375.5" font-size="16" font-weight="700" fill="#C7CBFF">RangeMarginCelsius()</text>
-<rect x="469.3" y="357.4" width="142.3" height="26" rx="13" fill="#1C1F3D" stroke="#3B4080" stroke-width="1"/>
-<text x="477.3" y="375.5" font-size="16" font-weight="700" fill="#C7CBFF">VoltsAtZeroC()</text>
-<rect x="619.5" y="357.4" width="161.6" height="26" rx="13" fill="#1C1F3D" stroke="#3B4080" stroke-width="1"/>
-<text x="627.5" y="375.5" font-size="16" font-weight="700" fill="#C7CBFF">VoltsPerCelsius()</text>
+<rect x="469.3" y="357.4" width="205.3" height="26" rx="13" fill="#1C1F3D" stroke="#3B4080" stroke-width="1"/>
+<text x="477.3" y="375.5" font-size="16" font-weight="700" fill="#C7CBFF">HasValidCoefficients()</text>
+<rect x="682.5" y="357.4" width="142.3" height="26" rx="13" fill="#1C1F3D" stroke="#3B4080" stroke-width="1"/>
+<text x="690.5" y="375.5" font-size="16" font-weight="700" fill="#C7CBFF">VoltsAtZeroC()</text>
+<rect x="832.8" y="357.4" width="161.6" height="26" rx="13" fill="#1C1F3D" stroke="#3B4080" stroke-width="1"/>
+<text x="840.8" y="375.5" font-size="16" font-weight="700" fill="#C7CBFF">VoltsPerCelsius()</text>
 <text x="48" y="307.4" font-size="17" font-weight="700" fill="#C7CBFF">HARDWARE-AGNOSTIC CORE</text>
 <text x="326.2" y="307.4" font-size="16" fill="#C7CBFF">Mcp9700Thermistor&lt;AdcType&gt;, inc/mcp9700_thermistor.hpp</text>
 <text x="56" y="476.4" font-size="20" font-weight="700" fill="#C7CBFF">ADC adapter contract</text>

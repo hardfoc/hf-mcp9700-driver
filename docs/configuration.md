@@ -12,7 +12,7 @@ plausibility range are the whole configuration. Snippets are compiled from [`tes
 | `adc_interface` | | `AdcType*`: your adapter; must outlive the driver |
 | `adc_channel` | | `uint8_t`: passed to `ReadChannelV()` unchanged |
 | `v_zero_c` | `0.5F` | Output at 0 °C, in volts |
-| `v_per_c` | `0.01F` | Slope in volts per °C; must be greater than 0 |
+| `v_per_c` | `0.01F` | Slope in volts per °C; must be finite and greater than 0 |
 
 The coefficients cannot be changed after construction. `VoltsAtZeroC()` and `VoltsPerCelsius()` read them back.
 

@@ -16,7 +16,7 @@ with the temperature, the problem is in the ADC or the adapter; if it does not, 
 
 | Symptom | Cause and fix |
 | --- | --- |
-| `Initialize()` returns `false` | Null adapter, `v_per_c` not positive, or `EnsureInitialized()` failed. Check the arguments, then the ADC set-up |
+| `Initialize()` returns `false` | Null adapter, `v_per_c` not a finite positive number, `v_zero_c` not finite, or `EnsureInitialized()` failed. Check the arguments, then the ADC set-up |
 | Every read returns `false` | Check `LastError()`. `kNotInitialized`: `Initialize()` not called or failed. `kAdcError`: `ReadChannelV()` returns non-zero; return `0` on success only and check the channel. `kOutOfRange`: see below |
 | Reads fail with `kOutOfRange` | `ReadVoltage()` shows the raw VOUT. Outside 20 mV to 1.83 V (default range): open wire, grounded input, sensor unpowered or wrong pin (0 V); input shorted to VDD; adapter returns millivolts; or the part runs outside −40 °C to +125 °C ([Configuration](configuration.md#plausibility-range)) |
 

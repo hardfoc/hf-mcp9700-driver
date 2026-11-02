@@ -49,7 +49,7 @@ enum class Error : uint8_t {
     kNone = 0,            ///< The last call succeeded.
     kNotInitialized,      ///< Read before a successful Initialize(), or after Deinitialize().
     kInvalidArgument,     ///< Null adapter or null output pointer, or an invalid range.
-    kInvalidCoefficients, ///< The coefficients cannot be used (slope not positive, not finite).
+    kInvalidCoefficients, ///< Offset not finite, or slope not a finite positive number.
     kAdcError,            ///< EnsureInitialized() returned false or ReadChannelV() returned non-zero.
     kOutOfRange,          ///< The voltage is outside the plausible range: open, shorted or mis-scaled input.
 };
@@ -132,6 +132,16 @@ public:
 
     /** @brief Why the last call that can fail failed; Error::kNone after a success. */
     [[nodiscard]] Error LastError() const noexcept { return last_error_; }
+
+    /**
+     * @brief True when the coefficients can be used: a finite offset and a finite slope above zero.
+     *
+     * Initialize() fails with Error::kInvalidCoefficients when this is false. A NaN or infinite
+     * offset or slope would otherwise make every reading NaN, 0 or infinite.
+     */
+    [[nodiscard]] bool HasValidCoefficients() const noexcept {
+        return std::isfinite(v_zero_c_) && std::isfinite(v_per_c_) && v_per_c_ > 0.0F;
+    }
 
     /** @brief Last configured output at 0 °C (volts). */
     [[nodiscard]] float VoltsAtZeroC() const noexcept { return v_zero_c_; }
