@@ -1,0 +1,14 @@
+{
+  "driver-layers": {
+    "title": "Three layers, one of them yours",
+    "alt": "Layer diagram: the application calls the hardware-agnostic MCP9700 driver, which relies on the ADC adapter contract, which the platform adapter you write fulfils, which reads the MCU's ADC connected to the MCP9700's analog output.",
+    "description": "From top to bottom. Your application talks to one Mcp9700Thermistor<AdcType> object per sensor, whose public calls (listed from inc/mcp9700_thermistor.hpp) initialise the ADC and return degrees Celsius. The core turns one ADC voltage into a temperature with (V - v_zero_c) / v_per_c. The ADC adapter contract is the template parameter: any class with the two methods named in the header's documentation, checked at compile time. The platform port is the only code you write: that class, which brings your ADC up and returns the voltage at the sensor's VOUT pin. Below it is the hardware.",
+    "profile": "overview",
+    "width": 1200,
+    "source": "docs/diagrams/figures/driver-layers.py",
+    "sources": [
+      "inc/mcp9700_thermistor.hpp:Mcp9700Thermistor public calls",
+      "inc/mcp9700_thermistor.hpp:AdcType contract"
+    ]
+  }
+}

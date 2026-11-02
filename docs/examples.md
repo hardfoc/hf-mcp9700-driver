@@ -1,41 +1,49 @@
----
-layout: default
-title: "💡 Examples"
-description: "ESP32-C6 ESP-IDF example for the MCP9700 driver"
-nav_order: 8
-parent: "📚 Documentation"
-permalink: /docs/examples/
----
-
 # Examples
 
-## ESP32-C6 (`examples/esp32`)
+A complete ESP32-C6 application that reads an MCP9700 through the on-chip ADC with the driver.
 
-| Item | Detail |
-| --- | --- |
-| Application | `mcp9700_esp32c6_example` |
-| ADC | ESP-IDF **oneshot** ADC + optional calibration |
-| Pin | **GPIO0** / **ADC1 CH0** by default |
-| Log | Temperature about every **500 ms** |
+It runs on an ESP32-C6 DevKit with the sensor's VOUT on GPIO0 (`ADC_UNIT_1`, `ADC_CHANNEL_0`); the pin, the
+attenuation and the adapter are at the top of
+[`mcp9700_esp32c6_example.cpp`](../examples/esp32/main/mcp9700_esp32c6_example.cpp). CI builds every app below on
+each pull request.
 
-### Submodule
+## The apps
 
-Initialize shared tooling before `./scripts/build_app.sh`:
+<!-- generated: examples -->
+| App | What it shows | Source | CI |
+| --- | --- | --- | --- |
+| `mcp9700_esp32c6_example` :material-star:{ title="featured" } | MCP9700 on ESP32-C6 ADC1 CH0 (GPIO0), oneshot + optional calibration | [`mcp9700_esp32c6_example.cpp`](../examples/esp32/main/mcp9700_esp32c6_example.cpp) | yes |
+
+Build and flash one (from `examples/esp32`, ESP-IDF environment loaded):
 
 ```bash
-git submodule update --init --recursive
-cd examples/esp32
-./scripts/build_app.sh mcp9700_esp32c6_example Debug
+./scripts/build_app.sh mcp9700_esp32c6_example Release
+./scripts/flash_app.sh flash_monitor mcp9700_esp32c6_example Release
 ```
 
-### Example source
+Source of this table: [`examples/esp32/app_config.yml`](../examples/esp32/app_config.yml).
+<!-- /generated -->
 
-The sketch lives at [`examples/esp32/main/mcp9700_esp32c6_example.cpp`](https://github.com/hardfoc/hf-mcp9700-driver/blob/main/examples/esp32/main/mcp9700_esp32c6_example.cpp) — it wraps `hf::mcp9700::Mcp9700Thermistor` with an ESP-IDF ADC adapter class.
+## Set up once
 
-### Full README
+```bash
+git submodule update --init examples/esp32/scripts   # the HardFOC ESP-IDF build scripts
+cd examples/esp32
+. $IDF_PATH/export.sh                                 # ESP-IDF v5.5
+./scripts/build_app.sh list                           # every app and build type
+```
 
-See **[examples/esp32/README.md](https://github.com/hardfoc/hf-mcp9700-driver/blob/main/examples/esp32/README.md)** for `idf.py` commands, wiring table, and troubleshooting.
+The scripts read [`app_config.yml`](../examples/esp32/app_config.yml) (the same file this page's table comes
+from) and build each app as its own firmware image.
 
-## Other platforms
+## What to read in an example
 
-There is no second bundled example today; port by implementing the adapter in [Quick start](quickstart.md) against your HAL. Contributions welcome via [Issues](https://github.com/hardfoc/hf-mcp9700-driver/issues).
+| You want to | Read |
+| --- | --- |
+| Write an ESP-IDF `adc_oneshot` adapter with calibration | `Esp32Mcp9700Adc` in `mcp9700_esp32c6_example.cpp` |
+| See the read loop and its error handling | `app_main()` in the same file |
+| Change the pin or attenuation | `AdcLayout` in the same file |
+
+The app logs the temperature every 500 ms. Without curve-fitting calibration it scales the raw code linearly to
+3.3 V, which is less accurate. The [example folder's README](../examples/esp32/README.md) has the wiring and the
+`idf.py` commands.

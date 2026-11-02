@@ -1,67 +1,67 @@
----
-layout: default
-title: "⚡ Quick start"
-description: "Minimal ADC adapter and first temperature read"
-nav_order: 4
-parent: "📚 Documentation"
-permalink: /docs/quickstart/
----
+# Quickstart
 
-# Quick start
+Read a temperature from your MCU: wire three pins, write a small ADC adapter, call two driver functions.
 
-## 1. Implement the adapter contract
+## 1. Wire it
 
-Your ADC type must provide:
+| MCP9700 | MCU | Notes |
+| --- | --- | --- |
+| VDD | 3.3 V (2.3 V to 5.5 V) | 0.1 µF to 1 µF ceramic capacitor to GND, close to the pins |
+| GND | GND | Common with the ADC ground |
+| VOUT | ADC input | 100 mV to 1.75 V; the ADC range must reach 1.75 V |
 
-| Method | Contract |
+Pin numbers depend on the package: SOT-23-3 and TO-92-3 are VDD 1, VOUT 2, GND 3. The [Hardware](hardware.md)
+page has the SC70-5 pinout, the output limits and the ADC settings.
+
+## 2. Add the driver
+
+Add the repository as a submodule and link the `hf::mcp9700` CMake target (or include `inc/` and the generated
+version header, with C++17). [Installation](installation.md) covers CMake and ESP-IDF.
+
+```bash
+git submodule add https://github.com/hardfoc/hf-mcp9700-driver.git external/hf-mcp9700-driver
+```
+
+## 3. Write the adapter
+
+The adapter is the only platform code. It brings the ADC up and returns the voltage at VOUT in volts. Replace the
+two `platform_*` calls with your SDK's.
+
+```cpp title="my_adc.hpp"
+--8<-- "tests/docs/my_adc.hpp:port"
+```
+
+Return the voltage **at the sensor pin**, after your ADC's calibration and after undoing any divider or
+attenuator in front of it. [Porting](porting.md) explains each method.
+
+## 4. Read the temperature
+
+```cpp title="main.cpp"
+--8<-- "tests/docs/quickstart.cpp:quickstart"
+```
+
+What each step does:
+
+1. The constructor stores the adapter pointer, the channel and the default coefficients (500 mV at 0 °C,
+   10 mV/°C). It does not touch the ADC.
+2. `Initialize()` calls your adapter's `EnsureInitialized()`. Reads fail until it has returned `true`.
+3. `ReadTemperatureCelsius()` calls `ReadChannelV()` once and returns `(V − 0.5) / 0.01`. A reading of 0.75 V is
+   25 °C.
+
+This example is built by the host CI, so it compiles against the current headers.
+
+## If it does not work
+
+| Symptom | First thing to check |
 | --- | --- |
-| `bool EnsureInitialized() noexcept` | Return `true` when the ADC is ready |
-| `int ReadChannelV(uint8_t channel, float* voltage_v) noexcept` | Write **volts** at the MCP9700 output; return **0** on success, non-zero on failure |
+| `Initialize()` returns `false` | Your `EnsureInitialized()`: ADC unit, channel, pin |
+| Reads about −50 °C | VOUT at 0 V: open wire, sensor unpowered, wrong ADC channel |
+| Reads thousands of degrees | The adapter returns millivolts, not volts |
+| Reads too high or too low by a fixed factor | ADC full scale, attenuation or a divider not undone |
+| Off by a few degrees | Sensor grade and the ADC's own error ([Transfer function](transfer-function.md)) |
 
-This matches common embedded conventions where **0** means success.
+## Next
 
-## 2. Construct the driver
-
-```cpp
-#include "mcp9700_thermistor.hpp"
-
-struct MyAdc {
-  bool EnsureInitialized() noexcept { return true; }
-  int ReadChannelV(uint8_t ch, float* v) noexcept {
-    if (!v || ch != 0) return 1;
-    *v = measured_voltage_volts;
-    return 0;
-  }
-};
-
-MyAdc adc;
-hf::mcp9700::Mcp9700Thermistor<MyAdc> mcp(&adc, /*channel*/ 0);
-```
-
-## 3. Initialize and read
-
-```cpp
-if (!mcp.Initialize()) { /* handle ADC init failure */ }
-
-float t{};
-if (mcp.ReadTemperatureCelsius(&t)) {
-  // t is degrees Celsius (typical linear model)
-}
-```
-
-## 4. Optional calibration
-
-Pass custom **`v_zero_c`** and **`v_per_c`** to the constructor if you characterize the sensor — see [Transfer function](transfer_function.md).
-
-## Source excerpt (reference)
-
-See [`inc/mcp9700_thermistor.hpp`](https://github.com/hardfoc/hf-mcp9700-driver/blob/main/inc/mcp9700_thermistor.hpp) on GitHub for the full template. Core entry points:
-
-```cpp
-bool Initialize() noexcept;
-bool ReadTemperatureCelsius(float* temperature_celsius) noexcept;
-[[nodiscard]] float VoltsAtZeroC() const noexcept;
-[[nodiscard]] float VoltsPerCelsius() const noexcept;
-```
-
-**Next:** [Transfer function →](transfer_function.md) · [Hardware setup →](hardware_setup.md)
+- [API guide](api-guide.md): calibration, averaging, error handling.
+- [Hardware](hardware.md): output characteristics, ADC resolution, layout.
+- [Examples](examples.md): the ESP32-C6 application.

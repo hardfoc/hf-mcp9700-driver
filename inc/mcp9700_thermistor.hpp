@@ -77,7 +77,7 @@ private:
 } // namespace mcp9700
 } // namespace hf
 
-/** @brief Driver version string (from generated @ref mcp9700_version.h). */
+/** @brief Driver version string (from the generated mcp9700_version.h). */
 inline const char* GetMcp9700DriverVersion() noexcept {
     return HF_MCP9700_VERSION_STRING;
 }
