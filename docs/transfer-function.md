@@ -57,9 +57,9 @@ calibration.
 
 ## Limits of the model
 
-- The driver applies the equation to any voltage, including values outside 100 mV to 1.75 V. An open input reads
-  −50 °C (0 V) and a shorted-to-supply input reads far above +125 °C, both as a successful read. Check the range
-  in your application ([API guide](api-guide.md#handle-errors)).
+- The driver applies the equation only inside the specified range plus a margin (−48 °C to +133 °C, 20 mV to
+  1.83 V by default). An open or grounded input (0 V, which would be −50 °C) and a shorted-to-supply input fail
+  with `Error::kOutOfRange` instead of returning a temperature ([API guide](api-guide.md#handle-errors)).
 - The coefficients are fixed when you construct the object. To change them, construct a new one.
 - There is no curve correction for the nonlinearity; the datasheet's AN1001 describes a lookup-table method.
 

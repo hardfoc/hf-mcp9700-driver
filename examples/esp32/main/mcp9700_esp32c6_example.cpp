@@ -159,7 +159,14 @@ extern "C" void app_main(void) {
         if (g_mcp.ReadTemperatureCelsius(&t_c)) {
             ESP_LOGI(TAG, "Temperature: %.2f °C", static_cast<double>(t_c));
         } else {
-            ESP_LOGW(TAG, "Temperature read failed");
+            const auto error = g_mcp.LastError();
+            float v_out = 0.0F;
+            if (error == hf::mcp9700::Error::kOutOfRange && g_mcp.ReadVoltage(&v_out)) {
+                // Open, grounded or shorted VOUT, or a wrong ADC scale.
+                ESP_LOGW(TAG, "VOUT = %.3f V is outside the sensor's range", static_cast<double>(v_out));
+            } else {
+                ESP_LOGW(TAG, "Temperature read failed (error %d)", static_cast<int>(error));
+            }
         }
         vTaskDelay(pdMS_TO_TICKS(500));
     }

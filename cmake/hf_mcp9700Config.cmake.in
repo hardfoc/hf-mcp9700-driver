@@ -1,5 +1,6 @@
 @PACKAGE_INIT@
 
-include("${CMAKE_CURRENT_LIST_DIR}/hf_mcp9700_build_settings.cmake")
+# Imports hf::mcp9700 (INTERFACE, C++17) with the installed include directory.
+include("${CMAKE_CURRENT_LIST_DIR}/hf_mcp9700Targets.cmake")
 
 check_required_components(hf_mcp9700)

@@ -3,6 +3,12 @@
     "Initialize",
     "Deinitialize",
     "ReadTemperatureCelsius",
+    "ReadVoltage",
+    "SetSpecifiedRange",
+    "SpecifiedMinCelsius",
+    "SpecifiedMaxCelsius",
+    "RangeMarginCelsius",
+    "HasValidCoefficients",
     "VoltsAtZeroC",
     "VoltsPerCelsius"
   ],

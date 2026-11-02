@@ -50,8 +50,9 @@ The series resistor goes in the **supply** line. The datasheet asks for nothing 
 | Line regulation | 0.1 °C/V typical |
 
 The first two rows are the driver's defaults, `kDefaultVoltsAtZeroC` and `kDefaultVoltsPerCelsius`. The output
-range is from Section 3.2. The sensor is characterised and tested with 1000 pF on VOUT; it does not need the
-capacitor to be stable.
+range is from Section 3.2; the driver rejects readings well outside it as an open, grounded or shorted input
+([Configuration](configuration.md#plausibility-range)). The sensor is characterised and tested with 1000 pF on
+VOUT; it does not need the capacitor to be stable.
 
 The output is not ratiometric: a 3.3 V and a 5 V supply give the same voltage at the same temperature, within the
 line regulation. The datasheet says added capacitance on VOUT reduces overshoot and undershoot, and that the sensor

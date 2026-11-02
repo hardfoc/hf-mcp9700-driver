@@ -2,8 +2,8 @@
 
 Symptoms you may see while bringing up an MCP9700, their causes and the fix for each.
 
-Start with a multimeter on VOUT: about 0.75 V at +25 °C. If the meter agrees with the temperature, the problem is
-in the ADC or the adapter; if it does not, it is in the wiring or the sensor.
+Start with a multimeter on VOUT: about 0.75 V at +25 °C, and compare it with `ReadVoltage()`. If the meter agrees
+with the temperature, the problem is in the ADC or the adapter; if it does not, it is in the wiring or the sensor.
 
 ## Build
 
@@ -16,15 +16,14 @@ in the ADC or the adapter; if it does not, it is in the wiring or the sensor.
 
 | Symptom | Cause and fix |
 | --- | --- |
-| `Initialize()` returns `false` | Null adapter, `v_per_c` not positive, or `EnsureInitialized()` failed. Check the arguments, then the ADC set-up |
-| Every read returns `false` | `Initialize()` not called or failed, or `ReadChannelV()` returns non-zero. Return `0` on success only; check the channel |
+| `Initialize()` returns `false` | Null adapter, `v_per_c` not a finite positive number, `v_zero_c` not finite, or `EnsureInitialized()` failed. Check the arguments, then the ADC set-up |
+| Every read returns `false` | Check `LastError()`. `kNotInitialized`: `Initialize()` not called or failed. `kAdcError`: `ReadChannelV()` returns non-zero; return `0` on success only and check the channel. `kOutOfRange`: see below |
+| Reads fail with `kOutOfRange` | `ReadVoltage()` shows the raw VOUT. Outside 20 mV to 1.83 V (default range): open wire, grounded input, sensor unpowered or wrong pin (0 V); input shorted to VDD; adapter returns millivolts; or the part runs outside −40 °C to +125 °C ([Configuration](configuration.md#plausibility-range)) |
 
 ## Wrong temperature
 
 | Symptom | Cause and fix |
 | --- | --- |
-| About −50 °C | VOUT reads 0 V: open wire, sensor unpowered or wrong pin. Check VDD at the sensor and the ADC pin mapping |
-| Thousands of degrees | The adapter returns millivolts. Divide by 1000 |
 | Wrong by a constant factor | ADC full scale, attenuation or a divider not undone. Return volts at the pin ([Hardware](hardware.md#adc-settings)) |
 | A few degrees off, steady | Sensor grade and ADC offset. Calibrate ([Configuration](configuration.md#one-point-calibration)) |
 | Warmer than the room | The sensor follows the board, heated by nearby parts. Move it, or use TO-92 for air ([Hardware](hardware.md#accuracy)) |

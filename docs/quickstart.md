@@ -46,7 +46,7 @@ What each step does:
    10 mV/°C). It does not touch the ADC.
 2. `Initialize()` calls your adapter's `EnsureInitialized()`. Reads fail until it has returned `true`.
 3. `ReadTemperatureCelsius()` calls `ReadChannelV()` once and returns `(V − 0.5) / 0.01`. A reading of 0.75 V is
-   25 °C.
+   25 °C. A result outside −40 °C to +125 °C by more than 8 °C (an open, grounded or shorted input) fails instead.
 
 This example is built by the host CI, so it compiles against the current headers.
 
@@ -55,8 +55,7 @@ This example is built by the host CI, so it compiles against the current headers
 | Symptom | First thing to check |
 | --- | --- |
 | `Initialize()` returns `false` | Your `EnsureInitialized()`: ADC unit, channel, pin |
-| Reads about −50 °C | VOUT at 0 V: open wire, sensor unpowered, wrong ADC channel |
-| Reads thousands of degrees | The adapter returns millivolts, not volts |
+| Reads fail, `LastError()` is `Error::kOutOfRange` | VOUT at 0 V (open wire, sensor unpowered, wrong ADC channel), at the supply, or the adapter returns millivolts |
 | Reads too high or too low by a fixed factor | ADC full scale, attenuation or a divider not undone |
 | Off by a few degrees | Sensor grade and the ADC's own error ([Transfer function](transfer-function.md)) |
 
