@@ -35,8 +35,29 @@ the generated `mcp9700_version.h`) and requires C++17 (`cxx_std_17`), so your ta
 | `HF_MCP9700_ENABLE_WARNINGS` | `OFF` | Adds `-Wall -Wextra -Wpedantic` to targets that link the driver |
 | `HF_MCP9700_BUILD_TESTS` | `OFF` | Builds the host unit tests in `tests/` ([Testing and CI](testing.md)) |
 
-`find_package(hf_mcp9700)` is not supported yet: the build writes a package configuration but installs nothing.
-Use `add_subdirectory()`.
+## Install and find_package
+
+`cmake --install` copies the header, the `.ipp`, the generated `mcp9700_version.h` and a package configuration:
+
+```bash
+cmake -S external/hf-mcp9700-driver -B build-mcp9700
+cmake --install build-mcp9700 --prefix /opt/hardfoc
+```
+
+| Installed path | Contents |
+| --- | --- |
+| `include/hf_mcp9700/inc/` | `mcp9700_thermistor.hpp`, `mcp9700_version.h` |
+| `include/hf_mcp9700/src/` | `mcp9700_thermistor.ipp`, included by the header as `../src/` |
+| `lib/cmake/hf_mcp9700/` | `hf_mcp9700Config.cmake`, `hf_mcp9700ConfigVersion.cmake`, `hf_mcp9700Targets.cmake` |
+
+A consumer then finds the same `hf::mcp9700` target. Point `CMAKE_PREFIX_PATH` at the install prefix:
+
+```cmake
+find_package(hf_mcp9700 1.0 REQUIRED)
+target_link_libraries(my_app PRIVATE hf::mcp9700)
+```
+
+The version check accepts any 1.x release (`SameMajorVersion`).
 
 ## Without the root CMakeLists
 
@@ -62,7 +83,8 @@ wrong. Your component then declares `REQUIRES hf_mcp9700`.
 | File | Role |
 | --- | --- |
 | [`cmake/hf_mcp9700_build_settings.cmake`](../cmake/hf_mcp9700_build_settings.cmake) | Include directories, version, IDF dependencies: the single source of truth |
-| [`CMakeLists.txt`](../CMakeLists.txt) | `INTERFACE` target for host builds and CI |
+| [`CMakeLists.txt`](../CMakeLists.txt) | `INTERFACE` target for host builds and CI, install rules |
+| [`cmake/hf_mcp9700Config.cmake.in`](../cmake/hf_mcp9700Config.cmake.in) | Package configuration for `find_package(hf_mcp9700)` |
 | [`examples/esp32/components/hf_mcp9700/`](../examples/esp32/components/hf_mcp9700/CMakeLists.txt) | ESP-IDF component wrapper over the same settings |
 
 The version is set once in the settings file and written into `mcp9700_version.h` at configure time, as

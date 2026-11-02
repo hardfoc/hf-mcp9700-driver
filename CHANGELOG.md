@@ -30,6 +30,10 @@ code that used the affected API; together they call for a major version bump at 
 
 ### Added
 
+- CMake install rules: `cmake --install` copies the header, the `.ipp` and the generated `mcp9700_version.h`
+  under `include/hf_mcp9700/`, and a package configuration, so `find_package(hf_mcp9700)` provides
+  `hf::mcp9700`. The package configuration used to include the build-settings file, which is not installed.
+
 - `ReadVoltage(float*)`: the raw sensor output voltage, without conversion or range check.
 - Plausibility range check on `ReadTemperatureCelsius()`, configurable with `SetSpecifiedRange()`;
   `kDefaultSpecifiedMinCelsius`, `kDefaultSpecifiedMaxCelsius`, `kDefaultRangeMarginCelsius`.
