@@ -1318,7 +1318,7 @@
 <details class="hf-figure-desc">
 <summary>Figure description and sources</summary>
 <p>From top to bottom. Your application talks to one Mcp9700Thermistor<AdcType> object per sensor, whose public calls (listed from inc/mcp9700_thermistor.hpp) initialise the ADC and return degrees Celsius. The core turns one ADC voltage into a temperature with (V - v_zero_c) / v_per_c. The ADC adapter contract is the template parameter: any class with the two methods named in the header's documentation, checked at compile time. The platform port is the only code you write: that class, which brings your ADC up and returns the voltage at the sensor's VOUT pin. Below it is the hardware.</p>
-<p>Drawn from: <a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/485a406b14f06ad6894ff92c7fefdb113e9e90aa/inc/mcp9700_thermistor.hpp"><code>inc/mcp9700_thermistor.hpp</code></a> <code>Mcp9700Thermistor public calls</code>; <a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/485a406b14f06ad6894ff92c7fefdb113e9e90aa/inc/mcp9700_thermistor.hpp"><code>inc/mcp9700_thermistor.hpp</code></a> <code>AdcType contract</code>; figure module <a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/485a406b14f06ad6894ff92c7fefdb113e9e90aa/docs/diagrams/figures/driver-layers.py"><code>docs/diagrams/figures/driver-layers.py</code></a>.</p>
+<p>Drawn from: <a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/3bea23c6b6b9977599c78c8888eb1a0f1dc467b2/inc/mcp9700_thermistor.hpp"><code>inc/mcp9700_thermistor.hpp</code></a> <code>Mcp9700Thermistor public calls</code>; <a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/3bea23c6b6b9977599c78c8888eb1a0f1dc467b2/inc/mcp9700_thermistor.hpp"><code>inc/mcp9700_thermistor.hpp</code></a> <code>AdcType contract</code>; figure module <a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/3bea23c6b6b9977599c78c8888eb1a0f1dc467b2/docs/diagrams/figures/driver-layers.py"><code>docs/diagrams/figures/driver-layers.py</code></a>.</p>
 </details>
 <h2 id="the-three-layers">The three layers<a class="headerlink" href="#the-three-layers" title="Permanent link">&para;</a></h2>
 <table>
@@ -1347,8 +1347,8 @@
 </tr>
 </tbody>
 </table>
-<p>The core is in <a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/485a406b14f06ad6894ff92c7fefdb113e9e90aa/inc/mcp9700_thermistor.hpp"><code>inc/mcp9700_thermistor.hpp</code></a> and
-<a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/485a406b14f06ad6894ff92c7fefdb113e9e90aa/src/mcp9700_thermistor.ipp"><code>src/mcp9700_thermistor.ipp</code></a>; the contract is documented on the class in the same
+<p>The core is in <a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/3bea23c6b6b9977599c78c8888eb1a0f1dc467b2/inc/mcp9700_thermistor.hpp"><code>inc/mcp9700_thermistor.hpp</code></a> and
+<a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/3bea23c6b6b9977599c78c8888eb1a0f1dc467b2/src/mcp9700_thermistor.ipp"><code>src/mcp9700_thermistor.ipp</code></a>; the contract is documented on the class in the same
 header. Everything above the adapter is the same on ESP32, STM32, a Linux host or the unit-test mock. That is how the
 <a href="../testing/">host tests</a> run the real driver code without hardware.</p>
 <h2 id="how-one-read-reaches-the-sensor">How one read reaches the sensor<a class="headerlink" href="#how-one-read-reaches-the-sensor" title="Permanent link">&para;</a></h2>
@@ -1384,8 +1384,8 @@ driver calls them. The cost is that the driver type names the adapter: <code>Mcp
 <td>ADC set-up, channel mapping, calibration, dividers</td>
 </tr>
 <tr>
-<td>The initialised state and the argument checks</td>
-<td>Averaging, filtering, range checks</td>
+<td>The initialised state, the argument checks and the plausibility range check</td>
+<td>Averaging, filtering, application limits</td>
 </tr>
 <tr>
 <td>Returning <code>false</code> on any failure</td>

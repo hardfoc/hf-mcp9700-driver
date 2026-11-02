@@ -1288,8 +1288,8 @@
 
 <h1 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h1>
 <p>Symptoms you may see while bringing up an MCP9700, their causes and the fix for each.</p>
-<p>Start with a multimeter on VOUT: about 0.75 V at +25 °C. If the meter agrees with the temperature, the problem is
-in the ADC or the adapter; if it does not, it is in the wiring or the sensor.</p>
+<p>Start with a multimeter on VOUT: about 0.75 V at +25 °C, and compare it with <code>ReadVoltage()</code>. If the meter agrees
+with the temperature, the problem is in the ADC or the adapter; if it does not, it is in the wiring or the sensor.</p>
 <h2 id="build">Build<a class="headerlink" href="#build" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1320,11 +1320,15 @@ in the ADC or the adapter; if it does not, it is in the wiring or the sensor.</p
 <tbody>
 <tr>
 <td><code>Initialize()</code> returns <code>false</code></td>
-<td>Null adapter, <code>v_per_c</code> not positive, or <code>EnsureInitialized()</code> failed. Check the arguments, then the ADC set-up</td>
+<td>Null adapter, <code>v_per_c</code> not a finite positive number, <code>v_zero_c</code> not finite, or <code>EnsureInitialized()</code> failed. Check the arguments, then the ADC set-up</td>
 </tr>
 <tr>
 <td>Every read returns <code>false</code></td>
-<td><code>Initialize()</code> not called or failed, or <code>ReadChannelV()</code> returns non-zero. Return <code>0</code> on success only; check the channel</td>
+<td>Check <code>LastError()</code>. <code>kNotInitialized</code>: <code>Initialize()</code> not called or failed. <code>kAdcError</code>: <code>ReadChannelV()</code> returns non-zero; return <code>0</code> on success only and check the channel. <code>kOutOfRange</code>: see below</td>
+</tr>
+<tr>
+<td>Reads fail with <code>kOutOfRange</code></td>
+<td><code>ReadVoltage()</code> shows the raw VOUT. Outside 20 mV to 1.83 V (default range): open wire, grounded input, sensor unpowered or wrong pin (0 V); input shorted to VDD; adapter returns millivolts; or the part runs outside −40 °C to +125 °C (<a href="../configuration/#plausibility-range">Configuration</a>)</td>
 </tr>
 </tbody>
 </table>
@@ -1337,14 +1341,6 @@ in the ADC or the adapter; if it does not, it is in the wiring or the sensor.</p
 </tr>
 </thead>
 <tbody>
-<tr>
-<td>About −50 °C</td>
-<td>VOUT reads 0 V: open wire, sensor unpowered or wrong pin. Check VDD at the sensor and the ADC pin mapping</td>
-</tr>
-<tr>
-<td>Thousands of degrees</td>
-<td>The adapter returns millivolts. Divide by 1000</td>
-</tr>
 <tr>
 <td>Wrong by a constant factor</td>
 <td>ADC full scale, attenuation or a divider not undone. Return volts at the pin (<a href="../hardware/#adc-settings">Hardware</a>)</td>

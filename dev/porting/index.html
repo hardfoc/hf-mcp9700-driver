@@ -1333,7 +1333,7 @@
 <h1 id="porting">Porting<a class="headerlink" href="#porting" title="Permanent link">&para;</a></h1>
 <p>Run the driver on a new MCU by writing one class: the ADC adapter.</p>
 <p>The driver never calls your SDK directly. It calls two methods on the class you pass as the <code>AdcType</code> template
-parameter (documented on <code>Mcp9700Thermistor</code> in <a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/485a406b14f06ad6894ff92c7fefdb113e9e90aa/inc/mcp9700_thermistor.hpp"><code>inc/mcp9700_thermistor.hpp</code></a>).
+parameter (documented on <code>Mcp9700Thermistor</code> in <a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/3bea23c6b6b9977599c78c8888eb1a0f1dc467b2/inc/mcp9700_thermistor.hpp"><code>inc/mcp9700_thermistor.hpp</code></a>).
 There is no base class: the calls are resolved at compile time, so there are no virtual functions, no vtable and
 nothing to allocate.</p>
 <figure class="hf-figure">
@@ -1344,7 +1344,7 @@ nothing to allocate.</p>
 <details class="hf-figure-desc">
 <summary>Figure description and sources</summary>
 <p>From top to bottom. Your application talks to one Mcp9700Thermistor<AdcType> object per sensor, whose public calls (listed from inc/mcp9700_thermistor.hpp) initialise the ADC and return degrees Celsius. The core turns one ADC voltage into a temperature with (V - v_zero_c) / v_per_c. The ADC adapter contract is the template parameter: any class with the two methods named in the header's documentation, checked at compile time. The platform port is the only code you write: that class, which brings your ADC up and returns the voltage at the sensor's VOUT pin. Below it is the hardware.</p>
-<p>Drawn from: <a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/485a406b14f06ad6894ff92c7fefdb113e9e90aa/inc/mcp9700_thermistor.hpp"><code>inc/mcp9700_thermistor.hpp</code></a> <code>Mcp9700Thermistor public calls</code>; <a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/485a406b14f06ad6894ff92c7fefdb113e9e90aa/inc/mcp9700_thermistor.hpp"><code>inc/mcp9700_thermistor.hpp</code></a> <code>AdcType contract</code>; figure module <a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/485a406b14f06ad6894ff92c7fefdb113e9e90aa/docs/diagrams/figures/driver-layers.py"><code>docs/diagrams/figures/driver-layers.py</code></a>.</p>
+<p>Drawn from: <a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/3bea23c6b6b9977599c78c8888eb1a0f1dc467b2/inc/mcp9700_thermistor.hpp"><code>inc/mcp9700_thermistor.hpp</code></a> <code>Mcp9700Thermistor public calls</code>; <a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/3bea23c6b6b9977599c78c8888eb1a0f1dc467b2/inc/mcp9700_thermistor.hpp"><code>inc/mcp9700_thermistor.hpp</code></a> <code>AdcType contract</code>; figure module <a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/3bea23c6b6b9977599c78c8888eb1a0f1dc467b2/docs/diagrams/figures/driver-layers.py"><code>docs/diagrams/figures/driver-layers.py</code></a>.</p>
 </details>
 <h2 id="what-you-implement">What you implement<a class="headerlink" href="#what-you-implement" title="Permanent link">&para;</a></h2>
 <p>Both are <code>noexcept</code>; the <a href="#the-adapter">adapter below</a> shows the exact signatures.</p>
@@ -1406,13 +1406,13 @@ success value is 0. The driver only tests it against zero.</p>
 </ul>
 <h2 id="reference-implementation">Reference implementation<a class="headerlink" href="#reference-implementation" title="Permanent link">&para;</a></h2>
 <p>The ESP32-C6 example's <code>Esp32Mcp9700Adc</code> in
-<a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/485a406b14f06ad6894ff92c7fefdb113e9e90aa/examples/esp32/main/mcp9700_esp32c6_example.cpp"><code>mcp9700_esp32c6_example.cpp</code></a> is a complete adapter over
+<a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/3bea23c6b6b9977599c78c8888eb1a0f1dc467b2/examples/esp32/main/mcp9700_esp32c6_example.cpp"><code>mcp9700_esp32c6_example.cpp</code></a> is a complete adapter over
 ESP-IDF <code>adc_oneshot</code>: <code>ADC_UNIT_1</code>, <code>ADC_CHANNEL_0</code> (GPIO0), 12-bit, with curve-fitting calibration when the
 chip supports it. Start from it for any ESP-IDF target.</p>
 <h2 id="check-your-adapter">Check your adapter<a class="headerlink" href="#check-your-adapter" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Build it: the adapter on this page is compiled by the host CI from
-   <a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/485a406b14f06ad6894ff92c7fefdb113e9e90aa/tests/docs/my_adc.hpp"><code>tests/docs/my_adc.hpp</code></a>, with the driver instantiated over it.</li>
+   <a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/3bea23c6b6b9977599c78c8888eb1a0f1dc467b2/tests/docs/my_adc.hpp"><code>tests/docs/my_adc.hpp</code></a>, with the driver instantiated over it.</li>
 <li>Measure VOUT with a multimeter and compare it with what <code>ReadChannelV()</code> returns. They should agree within
    your ADC's error.</li>
 <li>At room temperature, <code>ReadTemperatureCelsius()</code> should report roughly +20 °C to +30 °C (VOUT about 0.7 V to

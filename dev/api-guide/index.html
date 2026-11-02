@@ -911,6 +911,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#set-the-plausible-range" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Set the plausible range
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#re-initialise-and-read-the-version" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1306,6 +1317,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#set-the-plausible-range" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Set the plausible range
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#re-initialise-and-read-the-version" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1355,7 +1377,7 @@
 <h1 id="api-guide">API guide<a class="headerlink" href="#api-guide" title="Permanent link">&para;</a></h1>
 <p>How to do the common jobs with the driver: construct, initialise, read, average and handle errors.</p>
 <p>Every snippet on this page is compiled by the host CI from
-<a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/485a406b14f06ad6894ff92c7fefdb113e9e90aa/tests/docs/api_tasks.cpp"><code>tests/docs/api_tasks.cpp</code></a>, with <code>Sensor</code> standing for
+<a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/3bea23c6b6b9977599c78c8888eb1a0f1dc467b2/tests/docs/api_tasks.cpp"><code>tests/docs/api_tasks.cpp</code></a>, with <code>Sensor</code> standing for
 <code>hf::mcp9700::Mcp9700Thermistor&lt;MyAdc&gt;</code>. The <a href="../api-reference/">API reference</a> lists every member.</p>
 <h2 id="the-shape-of-the-api">The shape of the API<a class="headerlink" href="#the-shape-of-the-api" title="Permanent link">&para;</a></h2>
 <p>One <code>Mcp9700Thermistor&lt;AdcType&gt;</code> object per sensor, in namespace <code>hf::mcp9700</code>.</p>
@@ -1377,7 +1399,19 @@
 </tr>
 <tr>
 <td><code>ReadTemperatureCelsius(float*)</code></td>
-<td>One ADC read, converted to °C</td>
+<td>One ADC read, converted to °C and checked against the sensor's range</td>
+</tr>
+<tr>
+<td><code>ReadVoltage(float*)</code></td>
+<td>One ADC read, the raw VOUT in volts: no conversion, no range check</td>
+</tr>
+<tr>
+<td><code>SetSpecifiedRange(min, max, margin)</code></td>
+<td>The temperature range a reading must fall in (default −40 °C to +125 °C, 8 °C margin)</td>
+</tr>
+<tr>
+<td><code>LastError()</code></td>
+<td>Why the last call that can fail failed (<code>hf::mcp9700::Error</code>)</td>
 </tr>
 <tr>
 <td><code>Deinitialize()</code></td>
@@ -1390,6 +1424,10 @@
 <tr>
 <td><code>VoltsPerCelsius()</code></td>
 <td>The slope in use</td>
+</tr>
+<tr>
+<td><code>HasValidCoefficients()</code></td>
+<td><code>true</code> when the offset is finite and the slope is finite and above zero</td>
 </tr>
 <tr>
 <td><code>GetMcp9700DriverVersion()</code></td>
@@ -1406,7 +1444,8 @@
 <p>The two coefficient arguments are optional. Leave them out for the MCP9700, MCP9700A and MCP9700B datasheet
 typicals; pass your own after a calibration (<a href="../configuration/">Configuration</a>). The channel is passed to your
 adapter unchanged: it means whatever your adapter says it means.</p>
-<p><code>Initialize()</code> returns <code>false</code> when the adapter pointer is null, when <code>v_per_c</code> is zero or negative, or when
+<p><code>Initialize()</code> returns <code>false</code> when the adapter pointer is null, when the coefficients
+are unusable (<code>v_per_c</code> zero, negative, NaN or infinite, or <code>v_zero_c</code> NaN or infinite), or when
 <code>EnsureInitialized()</code> returns <code>false</code>. Several sensors can share one adapter; each <code>Initialize()</code> calls
 <code>EnsureInitialized()</code> again, so make it safe to call twice.</p>
 <h2 id="read-the-temperature">Read the temperature<a class="headerlink" href="#read-the-temperature" title="Permanent link">&para;</a></h2>
@@ -1437,50 +1476,79 @@ filters ADC and supply noise without hiding real temperature changes.</p>
 <h2 id="handle-errors">Handle errors<a class="headerlink" href="#handle-errors" title="Permanent link">&para;</a></h2>
 <div class="language-cpp highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kt">float</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0F</span><span class="p">;</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">sensor</span><span class="p">.</span><span class="n">ReadTemperatureCelsius</span><span class="p">(</span><span class="o">&amp;</span><span class="n">t</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w">                                 </span><span class="c1">// not initialised, null output or adapter error</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="p">}</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1">// The driver does not range-check. VOUT is 100 mV to 1.75 V over -40 C to +125 C, so a reading far</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1">// outside that range means an open input, a short or a wrong ADC scale, not a temperature.</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">t</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mf">-45.0F</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">130.0F</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="p">}</span>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="o">*</span><span class="n">celsius</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t</span><span class="p">;</span>
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">sensor</span><span class="p">.</span><span class="n">LastError</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">hf</span><span class="o">::</span><span class="no">mcp9700</span><span class="o">::</span><span class="no">Error</span><span class="o">::</span><span class="no">kOutOfRange</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">     </span><span class="c1">// open, grounded or shorted input, or wrong ADC scale</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">      </span><span class="kt">float</span><span class="w"> </span><span class="n">volts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0F</span><span class="p">;</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">sensor</span><span class="p">.</span><span class="n">ReadVoltage</span><span class="p">(</span><span class="o">&amp;</span><span class="n">volts</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">         </span><span class="c1">// the raw VOUT, unconverted and unchecked</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">printf</span><span class="p">(</span><span class="s">"VOUT %.3f V is outside the sensor's range</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">volts</span><span class="p">));</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">      </span><span class="p">}</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">      </span><span class="k">break</span><span class="p">;</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">hf</span><span class="o">::</span><span class="no">mcp9700</span><span class="o">::</span><span class="no">Error</span><span class="o">::</span><span class="no">kAdcError</span><span class="p">:</span><span class="w">         </span><span class="c1">// ReadChannelV() returned non-zero</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">printf</span><span class="p">(</span><span class="s">"ADC read failed</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">      </span><span class="k">break</span><span class="p">;</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">    </span><span class="k">default</span><span class="o">:</span><span class="w">                                    </span><span class="c1">// not initialised or null output</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">      </span><span class="k">break</span><span class="p">;</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w">                                 </span><span class="c1">// t is unchanged on failure</span>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="p">}</span>
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="o">*</span><span class="n">celsius</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t</span><span class="p">;</span>
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
 </span></code></pre></div>
 <table>
 <thead>
 <tr>
-<th>Signal</th>
+<th><code>LastError()</code></th>
 <th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>Initialize()</code> returns <code>false</code></td>
-<td>Null adapter, slope not positive, or your <code>EnsureInitialized()</code> failed</td>
+<td><code>Error::kInvalidArgument</code></td>
+<td>Null adapter, null output pointer, or an invalid range passed to <code>SetSpecifiedRange()</code></td>
 </tr>
 <tr>
-<td><code>ReadTemperatureCelsius()</code> returns <code>false</code></td>
-<td>Not initialised, null output pointer, or your <code>ReadChannelV()</code> returned non-zero</td>
+<td><code>Error::kInvalidCoefficients</code></td>
+<td><code>Initialize()</code>: the slope is not a finite positive number, or the offset is not finite</td>
 </tr>
 <tr>
-<td>A read succeeds at about −50 °C</td>
-<td>VOUT at 0 V: open wire or sensor unpowered (<a href="../troubleshooting/">Troubleshooting</a>)</td>
+<td><code>Error::kAdcError</code></td>
+<td>Your <code>EnsureInitialized()</code> returned <code>false</code> or your <code>ReadChannelV()</code> returned non-zero</td>
 </tr>
 <tr>
-<td>A read succeeds far above +125 °C</td>
-<td>VOUT near the supply, or the adapter returns millivolts</td>
+<td><code>Error::kNotInitialized</code></td>
+<td>Read before a successful <code>Initialize()</code>, or after <code>Deinitialize()</code></td>
+</tr>
+<tr>
+<td><code>Error::kOutOfRange</code></td>
+<td>The temperature is outside the specified range plus the margin, or not a number</td>
+</tr>
+<tr>
+<td><code>Error::kNone</code></td>
+<td>The last call succeeded</td>
 </tr>
 </tbody>
 </table>
-<p>The driver does not check the range of the voltage it converts, so the last two rows return <code>true</code>. On a
-failed read the output value is not written.</p>
+<p><code>kOutOfRange</code> catches the faults a plain conversion would report as a temperature: VOUT at 0 V (open wire,
+grounded input or unpowered sensor, which would read −50 °C), VOUT near the supply, or an adapter that returns
+millivolts. A working MCP9700 outputs 100 mV to 1.75 V over −40 °C to +125 °C (datasheet Section 3.2); with the
+8 °C margin the driver accepts 20 mV to 1.83 V. A floating input that happens to settle inside that window
+cannot be told from a temperature. On a failed read the output value is not written. <code>ReadVoltage()</code> returns
+the raw VOUT without the range check, to see what the pin reads.</p>
+<h2 id="set-the-plausible-range">Set the plausible range<a class="headerlink" href="#set-the-plausible-range" title="Permanent link">&para;</a></h2>
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">// High-temperature MCP9700 / MCP9700B (SOT-23-3, SC70-5): specified to +150 C. Keep the 8 C margin.</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">return</span><span class="w"> </span><span class="n">sensor</span><span class="p">.</span><span class="n">SetSpecifiedRange</span><span class="p">(</span><span class="mf">-40.0F</span><span class="p">,</span><span class="w"> </span><span class="mf">150.0F</span><span class="p">);</span>
+</span></code></pre></div>
+<p>The default range is the MCP9700 family's specified range. Widen it to +150 °C for the high-temperature parts,
+narrow it to −10 °C for the MCP9701 (<a href="../configuration/#plausibility-range">Configuration</a>). The margin (default
+<code>kDefaultRangeMarginCelsius</code>, 8 °C) covers the sensor's worst-case accuracy limits (−4 °C / +6 °C for the
+MCP9700) and some ADC error.</p>
 <h2 id="re-initialise-and-read-the-version">Re-initialise and read the version<a class="headerlink" href="#re-initialise-and-read-the-version" title="Permanent link">&para;</a></h2>
-<div class="language-cpp highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">sensor</span><span class="p">.</span><span class="n">Deinitialize</span><span class="p">();</span><span class="w">                          </span><span class="c1">// reads now fail; the ADC itself stays as it is</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">sensor</span><span class="p">.</span><span class="n">Initialize</span><span class="p">())</span><span class="w"> </span><span class="p">{</span><span class="w">                     </span><span class="c1">// calls EnsureInitialized() again</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">printf</span><span class="p">(</span><span class="s">"ADC did not come back</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">}</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">std</span><span class="o">::</span><span class="n">printf</span><span class="p">(</span><span class="s">"driver %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="w"> </span><span class="n">GetMcp9700DriverVersion</span><span class="p">());</span>
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">sensor</span><span class="p">.</span><span class="n">Deinitialize</span><span class="p">();</span><span class="w">                          </span><span class="c1">// reads now fail; the ADC itself stays as it is</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">sensor</span><span class="p">.</span><span class="n">Initialize</span><span class="p">())</span><span class="w"> </span><span class="p">{</span><span class="w">                     </span><span class="c1">// calls EnsureInitialized() again</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">printf</span><span class="p">(</span><span class="s">"ADC did not come back</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="p">}</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">std</span><span class="o">::</span><span class="n">printf</span><span class="p">(</span><span class="s">"driver %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="w"> </span><span class="n">GetMcp9700DriverVersion</span><span class="p">());</span>
 </span></code></pre></div>
 <p><code>Deinitialize()</code> only changes the driver's state; shutting down the ADC is your adapter's job.</p>
 <h2 id="next">Next<a class="headerlink" href="#next" title="Permanent link">&para;</a></h2>

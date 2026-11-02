@@ -1407,7 +1407,7 @@ attenuator in front of it. <a href="../porting/">Porting</a> explains each metho
 </span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
 </span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="kt">float</span><span class="w"> </span><span class="n">celsius</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0F</span><span class="p">;</span>
 </span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">sensor</span><span class="p">.</span><span class="n">ReadTemperatureCelsius</span><span class="p">(</span><span class="o">&amp;</span><span class="n">celsius</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// 2. one ADC read, (V - 0.5 V) / 0.01 V/°C</span>
-</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">-2</span><span class="p">;</span><span class="w">                                    </span><span class="c1">// the adapter returned non-zero</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">-2</span><span class="p">;</span><span class="w">                                    </span><span class="c1">// ADC error, or VOUT outside the sensor's range</span>
 </span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span><span class="p">}</span>
 </span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">printf</span><span class="p">(</span><span class="s">"Board temperature: %.1f C</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">celsius</span><span class="p">));</span>
 </span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
@@ -1419,7 +1419,7 @@ attenuator in front of it. <a href="../porting/">Porting</a> explains each metho
    10 mV/°C). It does not touch the ADC.</li>
 <li><code>Initialize()</code> calls your adapter's <code>EnsureInitialized()</code>. Reads fail until it has returned <code>true</code>.</li>
 <li><code>ReadTemperatureCelsius()</code> calls <code>ReadChannelV()</code> once and returns <code>(V − 0.5) / 0.01</code>. A reading of 0.75 V is
-   25 °C.</li>
+   25 °C. A result outside −40 °C to +125 °C by more than 8 °C (an open, grounded or shorted input) fails instead.</li>
 </ol>
 <p>This example is built by the host CI, so it compiles against the current headers.</p>
 <h2 id="if-it-does-not-work">If it does not work<a class="headerlink" href="#if-it-does-not-work" title="Permanent link">&para;</a></h2>
@@ -1436,12 +1436,8 @@ attenuator in front of it. <a href="../porting/">Porting</a> explains each metho
 <td>Your <code>EnsureInitialized()</code>: ADC unit, channel, pin</td>
 </tr>
 <tr>
-<td>Reads about −50 °C</td>
-<td>VOUT at 0 V: open wire, sensor unpowered, wrong ADC channel</td>
-</tr>
-<tr>
-<td>Reads thousands of degrees</td>
-<td>The adapter returns millivolts, not volts</td>
+<td>Reads fail, <code>LastError()</code> is <code>Error::kOutOfRange</code></td>
+<td>VOUT at 0 V (open wire, sensor unpowered, wrong ADC channel), at the supply, or the adapter returns millivolts</td>
 </tr>
 <tr>
 <td>Reads too high or too low by a fixed factor</td>

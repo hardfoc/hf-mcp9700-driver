@@ -1142,10 +1142,32 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#breaking-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Breaking changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#documentation" class="md-nav__link">
     <span class="md-ellipsis">
       
         Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
       
     </span>
   </a>
@@ -1223,10 +1245,32 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#breaking-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Breaking changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#documentation" class="md-nav__link">
     <span class="md-ellipsis">
       
         Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
       
     </span>
   </a>
@@ -1278,6 +1322,14 @@
 <p>What changed in each release of the driver. Entries marked <strong>BREAKING</strong> need source changes in code that used the
 affected API.</p>
 <h2 id="unreleased">Unreleased<a class="headerlink" href="#unreleased" title="Permanent link">&para;</a></h2>
+<h3 id="breaking-changes">Breaking changes<a class="headerlink" href="#breaking-changes" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>BREAKING</strong> <code>ReadTemperatureCelsius()</code> now fails (returns <code>false</code>, output untouched) when the converted
+  temperature is outside the specified range plus a margin, by default −40 °C to +125 °C ± 8 °C (20 mV to 1.83 V).
+  An open or grounded input (0 V) used to return −50 °C as a successful read. Code that reads a high-temperature
+  MCP9700/MCP9700B above +133 °C must call <code>SetSpecifiedRange(-40.0F, 150.0F)</code>. MCP9701 users should call
+  <code>SetSpecifiedRange(-10.0F, 125.0F)</code>: with the MCP9701 coefficients 0 V is −20.5 °C, inside the default window.</li>
+</ul>
 <h3 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h3>
 <ul>
 <li>The documentation site moved to the HardFOC MkDocs platform: new page set (quickstart, hardware, transfer
@@ -1285,11 +1337,39 @@ affected API.</p>
   under <code>/api/</code>, and every code sample compiled by the host build from <code>tests/docs/</code>.</li>
 <li>Corrected the hardware facts: the accuracy limits are ±4 °C (MCP9700) and ±2 °C (MCP9700A) maximum from 0 °C to
   +70 °C, not ±2 °C and ±1 °C typical; the output is not ratiometric to VDD; the README no longer lists a
-  <code>ReadVoltage()</code> call that does not exist.</li>
+  <code>ReadVoltage()</code> call that did not exist then.</li>
+</ul>
+<h3 id="fixed">Fixed<a class="headerlink" href="#fixed" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><code>HF_MCP9700_ENABLE_WARNINGS</code> no longer adds <code>-Wall -Wextra -Wpedantic</code> as <code>INTERFACE</code> options of <code>hf::mcp9700</code>,
+  which changed the warning flags of every target that linked the driver. The option is deprecated and has no
+  effect; it prints a deprecation message when set. Add warnings to your own target instead.</p>
+</li>
+<li>
+<p><code>Initialize()</code> now rejects a NaN or infinite slope or offset (<code>Error::kInvalidCoefficients</code>). Before, only a
+  slope of zero or below was caught, and a NaN or infinite coefficient made every reading NaN, 0 or infinite.</p>
+</li>
 </ul>
 <h3 id="added">Added<a class="headerlink" href="#added" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Host unit tests (<code>HF_MCP9700_BUILD_TESTS</code>) that run the driver against a scripted ADC adapter.</li>
+<li>
+<p>CMake install rules: <code>cmake --install</code> copies the header, the <code>.ipp</code> and the generated <code>mcp9700_version.h</code>
+  under <code>include/hf_mcp9700/</code>, and a package configuration, so <code>find_package(hf_mcp9700)</code> provides
+  <code>hf::mcp9700</code>. The package configuration used to include the build-settings file, which is not installed.</p>
+</li>
+<li>
+<p><code>ReadVoltage(float*)</code>: the raw sensor output voltage, without conversion or range check.</p>
+</li>
+<li>Plausibility range check on <code>ReadTemperatureCelsius()</code>, configurable with <code>SetSpecifiedRange()</code>;
+  <code>kDefaultSpecifiedMinCelsius</code>, <code>kDefaultSpecifiedMaxCelsius</code>, <code>kDefaultRangeMarginCelsius</code>.</li>
+<li><code>hf::mcp9700::Error</code> and <code>LastError()</code>: why the last call failed.</li>
+<li>
+<p><code>HasValidCoefficients()</code>: whether the offset and slope can be used.</p>
+</li>
+<li>
+<p>Host unit tests (<code>HF_MCP9700_BUILD_TESTS</code>) that run the driver against a scripted ADC adapter.</p>
+</li>
 </ul>
 
 

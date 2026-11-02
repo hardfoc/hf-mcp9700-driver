@@ -1486,8 +1486,9 @@ one, and keep digital lines away from the sensor.</p>
 </tbody>
 </table>
 <p>The first two rows are the driver's defaults, <code>kDefaultVoltsAtZeroC</code> and <code>kDefaultVoltsPerCelsius</code>. The output
-range is from Section 3.2. The sensor is characterised and tested with 1000 pF on VOUT; it does not need the
-capacitor to be stable.</p>
+range is from Section 3.2; the driver rejects readings well outside it as an open, grounded or shorted input
+(<a href="../configuration/#plausibility-range">Configuration</a>). The sensor is characterised and tested with 1000 pF on
+VOUT; it does not need the capacitor to be stable.</p>
 <p>The output is not ratiometric: a 3.3 V and a 5 V supply give the same voltage at the same temperature, within the
 line regulation. The datasheet says added capacitance on VOUT reduces overshoot and undershoot, and that the sensor
 can sit far from the MCU because it is immune to parasitic capacitance.</p>

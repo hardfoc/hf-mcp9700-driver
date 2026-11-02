@@ -1288,7 +1288,8 @@ read.</p>
   datasheet's first-order transfer function. See <a href="transfer-function/">Transfer function</a>.</li>
 <li><strong>Your calibration.</strong> Pass your own offset and slope to the constructor after a one-point or two-point
   calibration, or the MCP9701 coefficients. See <a href="configuration/">Configuration</a>.</li>
-<li><strong>Errors you can act on.</strong> Every call returns <code>bool</code>; a failed read leaves your value untouched. See
+<li><strong>Errors you can act on.</strong> Every call returns <code>bool</code> and <code>LastError()</code> says why; an open, grounded or shorted
+  input fails instead of reading −50 °C. A failed read leaves your value untouched. See
   <a href="api-guide/#handle-errors">API guide</a>.</li>
 <li><strong>Zero-overhead portability.</strong> The adapter is a template parameter with two methods: no virtual calls, no heap,
   no RTOS dependency. See <a href="porting/">Porting</a>.</li>

@@ -950,6 +950,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#plausibility-range" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plausibility range
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#next" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1317,6 +1328,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#plausibility-range" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plausibility range
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#next" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1354,8 +1376,8 @@
 
 <h1 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h1>
 <p>The two coefficients the driver uses, where their values come from, and how to calibrate them for one sensor.</p>
-<p>The driver has no configuration structure and no registers: the constructor's two coefficient arguments are the
-whole configuration. Snippets are compiled from <a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/485a406b14f06ad6894ff92c7fefdb113e9e90aa/tests/docs/configuration.cpp"><code>tests/docs/configuration.cpp</code></a>.</p>
+<p>The driver has no configuration structure and no registers: the constructor's two coefficient arguments and the
+plausibility range are the whole configuration. Snippets are compiled from <a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/3bea23c6b6b9977599c78c8888eb1a0f1dc467b2/tests/docs/configuration.cpp"><code>tests/docs/configuration.cpp</code></a>.</p>
 <h2 id="constructor-arguments">Constructor arguments<a class="headerlink" href="#constructor-arguments" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1384,7 +1406,7 @@ whole configuration. Snippets are compiled from <a href="https://github.com/hard
 <tr>
 <td><code>v_per_c</code></td>
 <td><code>0.01F</code></td>
-<td>Slope in volts per °C; must be greater than 0</td>
+<td>Slope in volts per °C; must be finite and greater than 0</td>
 </tr>
 </tbody>
 </table>
@@ -1449,10 +1471,54 @@ to +70 °C), which remains between and outside the two points.</p>
 <div class="language-cpp highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">// MCP9701 / MCP9701A: same transfer function, different typicals (datasheet DC characteristics).</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">constexpr</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">kMcp9701VoltsAtZeroC</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.400F</span><span class="p">;</span><span class="w">     </span><span class="c1">// 400 mV</span>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">constexpr</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">kMcp9701VoltsPerCelsius</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0195F</span><span class="p">;</span><span class="w"> </span><span class="c1">// 19.5 mV/°C</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">constexpr</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">kMcp9701MinCelsius</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">-10.0F</span><span class="p">;</span><span class="w">       </span><span class="c1">// specified range -10 °C to +125 °C</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">constexpr</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">kMcp9701MaxCelsius</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">125.0F</span><span class="p">;</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="kt">bool</span><span class="w"> </span><span class="nf">make_mcp9701</span><span class="p">(</span><span class="n">MyAdc</span><span class="o">&amp;</span><span class="w"> </span><span class="n">adc</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="n">hf</span><span class="o">::</span><span class="n">mcp9700</span><span class="o">::</span><span class="n">Mcp9700Thermistor</span><span class="o">&lt;</span><span class="n">MyAdc</span><span class="o">&gt;</span><span class="w"> </span><span class="n">sensor</span><span class="p">(</span><span class="o">&amp;</span><span class="n">adc</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">kMcp9701VoltsAtZeroC</span><span class="p">,</span><span class="w"> </span><span class="n">kMcp9701VoltsPerCelsius</span><span class="p">);</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">sensor</span><span class="p">.</span><span class="n">SetSpecifiedRange</span><span class="p">(</span><span class="n">kMcp9701MinCelsius</span><span class="p">,</span><span class="w"> </span><span class="n">kMcp9701MaxCelsius</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">sensor</span><span class="p">.</span><span class="n">Initialize</span><span class="p">();</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="p">}</span>
 </span></code></pre></div>
 <p>The MCP9701 and MCP9701A use the same equation with these typicals, a 3.1 V to 5.5 V supply and an output of
-200 mV to 3 V. The driver was written and tested for the MCP9700 family; with these coefficients it computes the
-MCP9701 transfer function the same way.</p>
+200 mV to 3 V, specified from −10 °C to +125 °C, so the snippet narrows the
+<a href="#plausibility-range">plausibility range</a> as well. The driver was written and tested for the MCP9700 family; with
+these coefficients it computes the MCP9701 transfer function the same way.</p>
+<h2 id="plausibility-range">Plausibility range<a class="headerlink" href="#plausibility-range" title="Permanent link">&para;</a></h2>
+<p><code>ReadTemperatureCelsius()</code> fails with <code>Error::kOutOfRange</code> when the result is outside the specified temperature
+range widened by a margin on both sides (<a href="../api-guide/#handle-errors">API guide</a>). Set it with
+<code>SetSpecifiedRange(min_celsius, max_celsius, margin_celsius)</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th><code>min_celsius</code></th>
+<th><code>max_celsius</code></th>
+<th>Datasheet</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MCP9700, MCP9700A, MCP9700B (default)</td>
+<td>−40</td>
+<td>+125</td>
+<td>Temperature Characteristics, specified range</td>
+</tr>
+<tr>
+<td>MCP9700, MCP9700B high temperature (SOT-23-3, SC70-5)</td>
+<td>−40</td>
+<td>+150</td>
+<td>Temperature Characteristics</td>
+</tr>
+<tr>
+<td>MCP9701, MCP9701A</td>
+<td>−10</td>
+<td>+125</td>
+<td>Temperature Characteristics</td>
+</tr>
+</tbody>
+</table>
+<p>The margin defaults to 8 °C (<code>kDefaultRangeMarginCelsius</code>). It must be zero or more; a minimum that is not below
+the maximum, or a value that is not finite, is refused and the previous range is kept.</p>
 <h2 id="next">Next<a class="headerlink" href="#next" title="Permanent link">&para;</a></h2>
 <p><a href="../porting/">Porting</a> writes the ADC adapter; <a href="../transfer-function/">Transfer function</a> explains the error budget.</p>
 

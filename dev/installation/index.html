@@ -641,6 +641,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#install-and-find_package" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install and find_package
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#without-the-root-cmakelists" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1295,6 +1306,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#install-and-find_package" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install and find_package
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#without-the-root-cmakelists" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1407,7 +1429,7 @@ the generated <code>mcp9700_version.h</code>) and requires C++17 (<code>cxx_std_
 <tr>
 <td><code>HF_MCP9700_ENABLE_WARNINGS</code></td>
 <td><code>OFF</code></td>
-<td>Adds <code>-Wall -Wextra -Wpedantic</code> to targets that link the driver</td>
+<td>Deprecated, no effect (prints a deprecation message). Set warnings on your own target</td>
 </tr>
 <tr>
 <td><code>HF_MCP9700_BUILD_TESTS</code></td>
@@ -1416,18 +1438,48 @@ the generated <code>mcp9700_version.h</code>) and requires C++17 (<code>cxx_std_
 </tr>
 </tbody>
 </table>
-<p><code>find_package(hf_mcp9700)</code> is not supported yet: the build writes a package configuration but installs nothing.
-Use <code>add_subdirectory()</code>.</p>
+<h2 id="install-and-find_package">Install and find_package<a class="headerlink" href="#install-and-find_package" title="Permanent link">&para;</a></h2>
+<p><code>cmake --install</code> copies the header, the <code>.ipp</code>, the generated <code>mcp9700_version.h</code> and a package configuration:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cmake<span class="w"> </span>-S<span class="w"> </span>external/hf-mcp9700-driver<span class="w"> </span>-B<span class="w"> </span>build-mcp9700
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cmake<span class="w"> </span>--install<span class="w"> </span>build-mcp9700<span class="w"> </span>--prefix<span class="w"> </span>/opt/hardfoc
+</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Installed path</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>include/hf_mcp9700/inc/</code></td>
+<td><code>mcp9700_thermistor.hpp</code>, <code>mcp9700_version.h</code></td>
+</tr>
+<tr>
+<td><code>include/hf_mcp9700/src/</code></td>
+<td><code>mcp9700_thermistor.ipp</code>, included by the header as <code>../src/</code></td>
+</tr>
+<tr>
+<td><code>lib/cmake/hf_mcp9700/</code></td>
+<td><code>hf_mcp9700Config.cmake</code>, <code>hf_mcp9700ConfigVersion.cmake</code>, <code>hf_mcp9700Targets.cmake</code></td>
+</tr>
+</tbody>
+</table>
+<p>A consumer then finds the same <code>hf::mcp9700</code> target. Point <code>CMAKE_PREFIX_PATH</code> at the install prefix:</p>
+<div class="language-cmake highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">find_package</span><span class="p">(</span><span class="s">hf_mcp9700</span><span class="w"> </span><span class="s">1.0</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">my_app</span><span class="w"> </span><span class="s">PRIVATE</span><span class="w"> </span><span class="s">hf::mcp9700</span><span class="p">)</span>
+</span></code></pre></div>
+<p>The version check accepts any 1.x release (<code>SameMajorVersion</code>).</p>
 <h2 id="without-the-root-cmakelists">Without the root CMakeLists<a class="headerlink" href="#without-the-root-cmakelists" title="Permanent link">&para;</a></h2>
-<p>Include <a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/485a406b14f06ad6894ff92c7fefdb113e9e90aa/cmake/hf_mcp9700_build_settings.cmake"><code>cmake/hf_mcp9700_build_settings.cmake</code></a> and add
+<p>Include <a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/3bea23c6b6b9977599c78c8888eb1a0f1dc467b2/cmake/hf_mcp9700_build_settings.cmake"><code>cmake/hf_mcp9700_build_settings.cmake</code></a> and add
 <code>HF_MCP9700_PUBLIC_INCLUDE_DIRS</code> to your target. Including the file is what generates <code>mcp9700_version.h</code> (into
 <code>hf_mcp9700_generated/</code> under the current binary directory); <code>mcp9700_thermistor.hpp</code> does not compile without it.</p>
-<div class="language-cmake highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">include</span><span class="p">(</span><span class="o">${</span><span class="nv">CMAKE_CURRENT_SOURCE_DIR</span><span class="o">}</span><span class="s">/external/hf-mcp9700-driver/cmake/hf_mcp9700_build_settings.cmake</span><span class="p">)</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">target_include_directories</span><span class="p">(</span><span class="s">my_app</span><span class="w"> </span><span class="s">PRIVATE</span><span class="w"> </span><span class="o">${</span><span class="nv">HF_MCP9700_PUBLIC_INCLUDE_DIRS</span><span class="o">}</span><span class="p">)</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">target_compile_features</span><span class="p">(</span><span class="s">my_app</span><span class="w"> </span><span class="s">PRIVATE</span><span class="w"> </span><span class="s">cxx_std_17</span><span class="p">)</span>
+<div class="language-cmake highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">include</span><span class="p">(</span><span class="o">${</span><span class="nv">CMAKE_CURRENT_SOURCE_DIR</span><span class="o">}</span><span class="s">/external/hf-mcp9700-driver/cmake/hf_mcp9700_build_settings.cmake</span><span class="p">)</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">target_include_directories</span><span class="p">(</span><span class="s">my_app</span><span class="w"> </span><span class="s">PRIVATE</span><span class="w"> </span><span class="o">${</span><span class="nv">HF_MCP9700_PUBLIC_INCLUDE_DIRS</span><span class="o">}</span><span class="p">)</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nb">target_compile_features</span><span class="p">(</span><span class="s">my_app</span><span class="w"> </span><span class="s">PRIVATE</span><span class="w"> </span><span class="s">cxx_std_17</span><span class="p">)</span>
 </span></code></pre></div>
 <h2 id="esp-idf">ESP-IDF<a class="headerlink" href="#esp-idf" title="Permanent link">&para;</a></h2>
-<p>The ESP-IDF component wrapper is <a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/485a406b14f06ad6894ff92c7fefdb113e9e90aa/examples/esp32/components/hf_mcp9700/CMakeLists.txt"><code>examples/esp32/components/hf_mcp9700/</code></a>.
+<p>The ESP-IDF component wrapper is <a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/3bea23c6b6b9977599c78c8888eb1a0f1dc467b2/examples/esp32/components/hf_mcp9700/CMakeLists.txt"><code>examples/esp32/components/hf_mcp9700/</code></a>.
 Copy that folder into your project's <code>components/</code> (or point <code>EXTRA_COMPONENT_DIRS</code> at it) and set the
 <code>HF_MCP9700_ROOT</code> cache variable to the driver checkout; the wrapper stops with a clear message when the path is
 wrong. Your component then declares <code>REQUIRES hf_mcp9700</code>.</p>
@@ -1441,22 +1493,26 @@ wrong. Your component then declares <code>REQUIRES hf_mcp9700</code>.</p>
 </thead>
 <tbody>
 <tr>
-<td><a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/485a406b14f06ad6894ff92c7fefdb113e9e90aa/cmake/hf_mcp9700_build_settings.cmake"><code>cmake/hf_mcp9700_build_settings.cmake</code></a></td>
+<td><a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/3bea23c6b6b9977599c78c8888eb1a0f1dc467b2/cmake/hf_mcp9700_build_settings.cmake"><code>cmake/hf_mcp9700_build_settings.cmake</code></a></td>
 <td>Include directories, version, IDF dependencies: the single source of truth</td>
 </tr>
 <tr>
-<td><a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/485a406b14f06ad6894ff92c7fefdb113e9e90aa/CMakeLists.txt"><code>CMakeLists.txt</code></a></td>
-<td><code>INTERFACE</code> target for host builds and CI</td>
+<td><a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/3bea23c6b6b9977599c78c8888eb1a0f1dc467b2/CMakeLists.txt"><code>CMakeLists.txt</code></a></td>
+<td><code>INTERFACE</code> target for host builds and CI, install rules</td>
 </tr>
 <tr>
-<td><a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/485a406b14f06ad6894ff92c7fefdb113e9e90aa/examples/esp32/components/hf_mcp9700/CMakeLists.txt"><code>examples/esp32/components/hf_mcp9700/</code></a></td>
+<td><a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/3bea23c6b6b9977599c78c8888eb1a0f1dc467b2/cmake/hf_mcp9700Config.cmake.in"><code>cmake/hf_mcp9700Config.cmake.in</code></a></td>
+<td>Package configuration for <code>find_package(hf_mcp9700)</code></td>
+</tr>
+<tr>
+<td><a href="https://github.com/hardfoc/hf-mcp9700-driver/blob/3bea23c6b6b9977599c78c8888eb1a0f1dc467b2/examples/esp32/components/hf_mcp9700/CMakeLists.txt"><code>examples/esp32/components/hf_mcp9700/</code></a></td>
 <td>ESP-IDF component wrapper over the same settings</td>
 </tr>
 </tbody>
 </table>
 <p>The version is set once in the settings file and written into <code>mcp9700_version.h</code> at configure time, as
 <code>HF_MCP9700_VERSION_MAJOR</code>, <code>_MINOR</code>, <code>_PATCH</code> and <code>HF_MCP9700_VERSION_STRING</code>. Read it at run time:</p>
-<div class="language-cpp highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GetMcp9700DriverVersion</span><span class="p">();</span><span class="w">   </span><span class="c1">// "1.0.0"</span>
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GetMcp9700DriverVersion</span><span class="p">();</span><span class="w">   </span><span class="c1">// "1.0.0"</span>
 </span></code></pre></div>
 <h2 id="compile-time-switches">Compile-time switches<a class="headerlink" href="#compile-time-switches" title="Permanent link">&para;</a></h2>
 <p>There are none. The coefficients are constructor arguments, not macros (<a href="../configuration/">Configuration</a>).</p>

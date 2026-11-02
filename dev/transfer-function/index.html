@@ -1418,9 +1418,9 @@ Section 4.1). Measuring a change relative to +25 °C is accurate to ±1 °C typi
 calibration.</p>
 <h2 id="limits-of-the-model">Limits of the model<a class="headerlink" href="#limits-of-the-model" title="Permanent link">&para;</a></h2>
 <ul>
-<li>The driver applies the equation to any voltage, including values outside 100 mV to 1.75 V. An open input reads
-  −50 °C (0 V) and a shorted-to-supply input reads far above +125 °C, both as a successful read. Check the range
-  in your application (<a href="../api-guide/#handle-errors">API guide</a>).</li>
+<li>The driver applies the equation only inside the specified range plus a margin (−48 °C to +133 °C, 20 mV to
+  1.83 V by default). An open or grounded input (0 V, which would be −50 °C) and a shorted-to-supply input fail
+  with <code>Error::kOutOfRange</code> instead of returning a temperature (<a href="../api-guide/#handle-errors">API guide</a>).</li>
 <li>The coefficients are fixed when you construct the object. To change them, construct a new one.</li>
 <li>There is no curve correction for the nonlinearity; the datasheet's AN1001 describes a lookup-table method.</li>
 </ul>
