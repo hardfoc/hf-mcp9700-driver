@@ -19,7 +19,7 @@ struct Coefficients {
   float v_per_c;    // volts per °C
 };
 
-// Two-point calibration: VOUT measured at two reference temperatures, at least 30 °C apart.
+// Two-point calibration: VOUT measured at two reference temperatures far apart (here 0 °C and +70 °C).
 constexpr Coefficients two_point(float t1_c, float v1, float t2_c, float v2) {
   const float slope = (v2 - v1) / (t2_c - t1_c);
   return {v1 - slope * t1_c, slope};

@@ -1,24 +1,37 @@
 # Troubleshooting
 
-## `mcp9700_version.h` not found
+Symptoms you may see while bringing up an MCP9700, their causes and the fix for each.
 
-Run CMake so [`cmake/hf_mcp9700_build_settings.cmake`](https://github.com/hardfoc/hf-mcp9700-driver/blob/main/cmake/hf_mcp9700_build_settings.cmake) can `configure_file` the version header, or add the generated include directory to your target. See [Installation](installation.md) and [CMake integration](cmake_integration.md).
+Start with a multimeter on VOUT: about 0.75 V at +25 °C. If the meter agrees with the temperature, the problem is
+in the ADC or the adapter; if it does not, it is in the wiring or the sensor.
 
-## Temperature clearly wrong
+## Build
 
-- Confirm **ADC attenuation** covers MCP9700 **Vout** (roughly **0.1–1.75 V** over −40–125 °C at 3.3 V supply — still stay within ADC range).  
-- Enable **adc calibration** when supported ([ESP-IDF calibration](https://docs.espressif.com/projects/esp-idf/en/stable/esp32c6/api-reference/peripherals/adc_calibration.html)).  
-- Verify **GPIO ↔ ADC channel** mapping for your chip variant ([hardware setup](hardware_setup.md)).  
-- Revisit the [transfer function](transfer_function.md) defaults vs your measured offset/slope.
+| Symptom | Cause and fix |
+| --- | --- |
+| `mcp9700_version.h` not found | The header was not generated. Link `hf::mcp9700`, or include the settings file ([Installation](installation.md#without-the-root-cmakelists)) |
+| No matching call to `EnsureInitialized` or `ReadChannelV` | The adapter's methods are missing or differ. Match the contract ([Porting](porting.md#what-you-implement)) |
 
-## `ReadChannelV` always fails
+## Initialisation and reads
 
-Return **0** only on success. Non-zero values are treated as failure by `Mcp9700Thermistor`.
+| Symptom | Cause and fix |
+| --- | --- |
+| `Initialize()` returns `false` | Null adapter, `v_per_c` not positive, or `EnsureInitialized()` failed. Check the arguments, then the ADC set-up |
+| Every read returns `false` | `Initialize()` not called or failed, or `ReadChannelV()` returns non-zero. Return `0` on success only; check the channel |
 
-## CI / docs link check
+## Wrong temperature
 
-Workflows live under [`.github/workflows/`](https://github.com/hardfoc/hf-mcp9700-driver/tree/main/.github/workflows). Docs use [`_config/lychee.toml`](https://github.com/hardfoc/hf-mcp9700-driver/blob/main/_config/lychee.toml) to exclude vendor/submodule Markdown that is not maintained in-tree.
+| Symptom | Cause and fix |
+| --- | --- |
+| About −50 °C | VOUT reads 0 V: open wire, sensor unpowered or wrong pin. Check VDD at the sensor and the ADC pin mapping |
+| Thousands of degrees | The adapter returns millivolts. Divide by 1000 |
+| Wrong by a constant factor | ADC full scale, attenuation or a divider not undone. Return volts at the pin ([Hardware](hardware.md#adc-settings)) |
+| A few degrees off, steady | Sensor grade and ADC offset. Calibrate ([Configuration](configuration.md#one-point-calibration)) |
+| Warmer than the room | The sensor follows the board, heated by nearby parts. Move it, or use TO-92 for air ([Hardware](hardware.md#accuracy)) |
+| Noisy | Supply noise or digital lines nearby. Decoupling, 200 Ω in VDD, averaging ([Hardware](hardware.md#wiring)) |
+| Wrong right after power-up from a GPIO | Read before the turn-on time. Wait at least 800 µs, with margin ([Hardware](hardware.md#timing)) |
 
-## Still stuck?
+## Still stuck
 
-Open an [issue](https://github.com/hardfoc/hf-mcp9700-driver/issues) with hardware (MCU, supply, pin), IDF or toolchain version, and a minimal log.
+Open an [issue](https://github.com/hardfoc/hf-mcp9700-driver/issues) with the MCU, the supply voltage, the ADC
+settings, a multimeter reading of VOUT and what the driver returned.

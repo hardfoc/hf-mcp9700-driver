@@ -1,0 +1,17 @@
+{
+  "calls": [
+    "Initialize",
+    "Deinitialize",
+    "ReadTemperatureCelsius",
+    "VoltsAtZeroC",
+    "VoltsPerCelsius"
+  ],
+  "port_hooks": [
+    "EnsureInitialized",
+    "ReadChannelV"
+  ],
+  "sources": [
+    "inc/mcp9700_thermistor.hpp:Mcp9700Thermistor public calls",
+    "inc/mcp9700_thermistor.hpp:AdcType contract"
+  ]
+}

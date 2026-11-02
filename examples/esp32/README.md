@@ -1,10 +1,11 @@
 # ESP32 MCP9700 examples (ESP32-C6)
 
-ESP-IDF examples for the **Microchip MCP9700 / MCP9700A** using the ESP32-C6 **on-chip SAR ADC** (no external SPI/I2C ADC required).
+ESP-IDF examples for the **Microchip MCP9700 / MCP9700A** using the ESP32-C6 **on-chip SAR ADC** (no external SPI/I2C
+ADC required).
 
-**Documentation:** [Docs home](../../docs/index.md) · [Hardware setup](../../docs/hardware_setup.md) · [Examples guide](../../docs/examples.md) · [ESP-IDF ADC (ESP32-C6)](https://docs.espressif.com/projects/esp-idf/en/stable/esp32c6/api-reference/peripherals/adc.html)
-
-![Wiring overview](../../docs/assets/mcp9700-wiring.svg)
+**Documentation:** [Docs home](../../docs/index.md) · [Hardware](../../docs/hardware.md) · [Examples
+guide](../../docs/examples.md) · [ESP-IDF ADC
+(ESP32-C6)](https://docs.espressif.com/projects/esp-idf/en/stable/esp32c6/api-reference/peripherals/adc.html)
 
 ## Submodule (required for `./scripts/build_app.sh`)
 
@@ -15,17 +16,21 @@ Initialize the shared tooling submodule once:
 git submodule update --init --recursive
 ```
 
-This checks out `examples/esp32/scripts` ([hf-espidf-project-tools](https://github.com/hardfoc/hf-espidf-project-tools)) so you can build and flash from `examples/esp32/` in this driver repo or from any consuming repository that vendors the same layout.
+This checks out `examples/esp32/scripts` ([hf-espidf-project-tools](https://github.com/hardfoc/hf-espidf-project-tools))
+so you can build and flash from `examples/esp32/` in this driver repo or from any consuming repository that vendors the
+same layout.
 
 ## Wiring (default configuration)
 
 | Signal | ESP32-C6 (default) |
 | --- | --- |
-| MCP9700 Vdd | 3.3 V (same as MCU IO rail used for ADC ref) |
-| MCP9700 Vss | GND |
-| MCP9700 Vout | **GPIO0** — **ADC1 channel 0** |
+| MCP9700 VDD | 3.3 V, with 0.1 µF to 1 µF to GND close to the sensor |
+| MCP9700 GND | GND |
+| MCP9700 VOUT | **GPIO0** — **ADC1 channel 0** |
 
-Edit `main/mcp9700_esp32c6_example.cpp` if you use another ADC-capable GPIO (update `ADC_CHANNEL_*` and attenuation to keep Vout in range). See also the [ADC oneshot API](https://docs.espressif.com/projects/esp-idf/en/stable/esp32c6/api-reference/peripherals/adc_oneshot.html).
+Edit `main/mcp9700_esp32c6_example.cpp` if you use another ADC-capable GPIO (update `ADC_CHANNEL_*` and attenuation to
+keep Vout in range). See also the [ADC oneshot
+API](https://docs.espressif.com/projects/esp-idf/en/stable/esp32c6/api-reference/peripherals/adc_oneshot.html).
 
 ## Build with scripts
 
