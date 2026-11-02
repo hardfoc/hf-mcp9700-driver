@@ -67,6 +67,26 @@ bool Mcp9700Thermistor<AdcType>::ReadTemperatureCelsius(float* temperature_celsi
 }
 
 template <typename AdcType>
+bool Mcp9700Thermistor<AdcType>::ReadVoltage(float* voltage_v) noexcept {
+    if (!initialized_ || adc_interface_ == nullptr) {
+        last_error_ = Error::kNotInitialized;
+        return false;
+    }
+    if (voltage_v == nullptr) {
+        last_error_ = Error::kInvalidArgument;
+        return false;
+    }
+    float v = 0.0F;
+    if (adc_interface_->ReadChannelV(adc_channel_, &v) != 0) {
+        last_error_ = Error::kAdcError;
+        return false;
+    }
+    *voltage_v = v;
+    last_error_ = Error::kNone;
+    return true;
+}
+
+template <typename AdcType>
 bool Mcp9700Thermistor<AdcType>::SetSpecifiedRange(float min_celsius, float max_celsius,
                                                    float margin_celsius) noexcept {
     if (!std::isfinite(min_celsius) || !std::isfinite(max_celsius) || !std::isfinite(margin_celsius) ||

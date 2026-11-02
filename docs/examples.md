@@ -44,6 +44,7 @@ from) and build each app as its own firmware image.
 | See the read loop and its error handling | `app_main()` in the same file |
 | Change the pin or attenuation | `AdcLayout` in the same file |
 
-The app logs the temperature every 500 ms. Without curve-fitting calibration it scales the raw code linearly to
-3.3 V, which is less accurate. The [example folder's README](../examples/esp32/README.md) has the wiring and the
+The app logs the temperature every 500 ms; when a read fails out of range it logs the raw VOUT from
+`ReadVoltage()` instead. Without curve-fitting calibration it scales the raw code linearly to 3.3 V, which is less
+accurate. The [example folder's README](../examples/esp32/README.md) has the wiring and the
 `idf.py` commands.

@@ -15,6 +15,7 @@ One `Mcp9700Thermistor<AdcType>` object per sensor, in namespace `hf::mcp9700`.
 | Constructor | Stores the adapter, channel and coefficients; no ADC access |
 | `Initialize()` | Checks the arguments, calls the adapter's `EnsureInitialized()` |
 | `ReadTemperatureCelsius(float*)` | One ADC read, converted to °C and checked against the sensor's range |
+| `ReadVoltage(float*)` | One ADC read, the raw VOUT in volts: no conversion, no range check |
 | `SetSpecifiedRange(min, max, margin)` | The temperature range a reading must fall in (default −40 °C to +125 °C, 8 °C margin) |
 | `LastError()` | Why the last call that can fail failed (`hf::mcp9700::Error`) |
 | `Deinitialize()` | Marks the object uninitialised; reads fail until `Initialize()` |
@@ -74,7 +75,8 @@ filters ADC and supply noise without hiding real temperature changes.
 grounded input or unpowered sensor, which would read −50 °C), VOUT near the supply, or an adapter that returns
 millivolts. A working MCP9700 outputs 100 mV to 1.75 V over −40 °C to +125 °C (datasheet Section 3.2); with the
 8 °C margin the driver accepts 20 mV to 1.83 V. A floating input that happens to settle inside that window
-cannot be told from a temperature. On a failed read the output value is not written.
+cannot be told from a temperature. On a failed read the output value is not written. `ReadVoltage()` returns
+the raw VOUT without the range check, to see what the pin reads.
 
 ## Set the plausible range
 

@@ -21,10 +21,11 @@ code that used the affected API; together they call for a major version bump at 
   under `/api/`, and every code sample compiled by the host build from `tests/docs/`.
 - Corrected the hardware facts: the accuracy limits are ±4 °C (MCP9700) and ±2 °C (MCP9700A) maximum from 0 °C to
   +70 °C, not ±2 °C and ±1 °C typical; the output is not ratiometric to VDD; the README no longer lists a
-  `ReadVoltage()` call that does not exist.
+  `ReadVoltage()` call that did not exist then.
 
 ### Added
 
+- `ReadVoltage(float*)`: the raw sensor output voltage, without conversion or range check.
 - Plausibility range check on `ReadTemperatureCelsius()`, configurable with `SetSpecifiedRange()`;
   `kDefaultSpecifiedMinCelsius`, `kDefaultSpecifiedMaxCelsius`, `kDefaultRangeMarginCelsius`.
 - `hf::mcp9700::Error` and `LastError()`: why the last call failed.

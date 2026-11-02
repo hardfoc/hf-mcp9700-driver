@@ -50,9 +50,13 @@ bool read_checked(Sensor& sensor, float* celsius) {
   float t = 0.0F;
   if (!sensor.ReadTemperatureCelsius(&t)) {
     switch (sensor.LastError()) {
-      case hf::mcp9700::Error::kOutOfRange:       // open, grounded or shorted input, or wrong ADC scale
-        std::printf("VOUT outside the sensor's range\n");
+      case hf::mcp9700::Error::kOutOfRange: {     // open, grounded or shorted input, or wrong ADC scale
+        float volts = 0.0F;
+        if (sensor.ReadVoltage(&volts)) {         // the raw VOUT, unconverted and unchecked
+          std::printf("VOUT %.3f V is outside the sensor's range\n", static_cast<double>(volts));
+        }
         break;
+      }
       case hf::mcp9700::Error::kAdcError:         // ReadChannelV() returned non-zero
         std::printf("ADC read failed\n");
         break;

@@ -212,6 +212,33 @@ TEST_CASE("LastError reports why a call failed") {
   CHECK(dead.LastError() == hf::mcp9700::Error::kAdcError);
 }
 
+TEST_CASE("ReadVoltage returns the adapter's voltage unconverted and unchecked") {
+  MockAdc adc;
+  Sensor sensor(&adc, 3);
+  float v = 9.0F;
+  CHECK(!sensor.ReadVoltage(&v));
+  CHECK(sensor.LastError() == hf::mcp9700::Error::kNotInitialized);
+  REQUIRE(sensor.Initialize());
+  CHECK(!sensor.ReadVoltage(nullptr));
+  CHECK(sensor.LastError() == hf::mcp9700::Error::kInvalidArgument);
+
+  adc.volts = 0.7512F;
+  CHECK(sensor.ReadVoltage(&v));
+  CHECK_NEAR(v, 0.7512, 1e-6);
+  CHECK(adc.last_channel == 3);
+
+  adc.volts = 0.0F;  // out of range for a temperature, still a valid voltage
+  CHECK(sensor.ReadVoltage(&v));
+  CHECK_NEAR(v, 0.0, 0.0);
+  CHECK(sensor.LastError() == hf::mcp9700::Error::kNone);
+
+  adc.read_error = 5;
+  v = 9.0F;
+  CHECK(!sensor.ReadVoltage(&v));
+  CHECK_NEAR(v, 9.0, 0.0);
+  CHECK(sensor.LastError() == hf::mcp9700::Error::kAdcError);
+}
+
 TEST_CASE("The version string matches the CMake version") {
   CHECK(std::strcmp(GetMcp9700DriverVersion(), HF_MCP9700_VERSION_STRING) == 0);
   CHECK(HF_MCP9700_VERSION_MAJOR >= 1);

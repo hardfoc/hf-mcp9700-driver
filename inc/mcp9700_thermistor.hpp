@@ -99,6 +99,16 @@ public:
     bool ReadTemperatureCelsius(float* temperature_celsius) noexcept;
 
     /**
+     * @brief Read the raw sensor output voltage (volts at VOUT, as the adapter reports it).
+     *
+     * One ReadChannelV() call, no conversion and no range check, so it shows what the pin really
+     * reads when ReadTemperatureCelsius() fails with Error::kOutOfRange.
+     *
+     * @return false (output untouched) when not initialised, voltage_v is null or the adapter fails.
+     */
+    bool ReadVoltage(float* voltage_v) noexcept;
+
+    /**
      * @brief Set the temperature range a reading must fall in to be accepted.
      *
      * Defaults: -40 °C to +125 °C with an 8 °C margin. Use -10 °C to +125 °C for the MCP9701/9701A
