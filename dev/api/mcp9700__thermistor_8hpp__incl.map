@@ -1,0 +1,9 @@
+<map id="inc/mcp9700_thermistor.hpp" name="inc/mcp9700_thermistor.hpp">
+<area shape="rect" id="Node000001" title="Hardware&#45;agnostic MCP9700 / MCP9700A linear active thermistor driver." alt="" coords="67,5,274,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,72,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="151,33,73,74,71,70,148,28"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="96,79,245,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="173,31,173,65,168,65,168,31"/>
+<area shape="rect" id="Node000004" href="$mcp9700__thermistor_8ipp.html" title=" " alt="" coords="270,79,485,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="205,28,332,72,330,77,203,33"/>
+</map>
